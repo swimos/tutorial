@@ -6,6 +6,6 @@ Swim is a completely integrated solution for building scalable, end-to-end strea
 
 - A **user interface** that uses Swim's streaming UI frameworks to visualize data from Swim servers in real-time
 
-Visit [server](https://github.com/swimos/swim-tutorial/blob/master/server) to learn how to stand up your data in a Swim server.
+Visit [server](https://github.com/swimos/tutorial/blob/master/server) to learn how to stand up your data in a Swim server.
 
-Then, visit [ui](https://github.com/swimos/swim-tutorial/blob/master/ui) to see this data like never before.
+Then, visit [ui](https://github.com/swimos/tutorial/blob/master/ui) to see this data like never before.
