@@ -32,7 +32,7 @@ Visit the [documentation](https://developer.swim.ai/concepts) for further detail
 
 ## Populating a Swim Server With Your Data
 
-Every Swim server can be written to and read from by external processes using the Swim API. The simplest way to utilize this API is to use a **Swim client** instance to [send commands to command lanes](http://github.com/swimos/tutorial/tree/master/server/src/main/java/swim/tutorial/TutorialPlane.java#L40).
+Every Swim server can be written to and read from by external processes using the Swim API. The simplest way to utilize this API is to use a **Swim client** instance to [send commands to command lanes](http://github.com/swimos/tutorial/blob/master/server/src/main/java/swim/tutorial/DataSource.java#L40).
 
 Visit the [documentation](https://developer.swim.ai/concepts) for further details about these concepts.
 
