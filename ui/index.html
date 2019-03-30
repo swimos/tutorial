@@ -101,10 +101,15 @@ const plot = new swim.LineGraphView()
     .strokeWidth(2);
 chart.addPlot(plot);
 
-function updatePlots(key, value) {
+function addToPlot(key, value) {
   const time = key.numberValue();
   const v = value.get("count").numberValue(0);
   plot.insertDatum({x: time, y: v, opacity: void 0});
+}
+
+function removeFromPlot(key) {
+  const time = key.numberValue();
+  plot.removeDatum(time);
 }
 
 /* Data Subscriptions */
@@ -123,12 +128,15 @@ const valueLink = swim.downlinkValue()
     })
     .open();
 
-const historyLink = swim.downlinkMap()
+const histogramLink = swim.downlinkMap()
     .hostUri("warp://localhost:9001")
     .nodeUri("/unit/master")
     .laneUri("histogram")
     .didUpdate(function(key, value) {
-      updatePlots(key, value);
+      addToPlot(key, value);
+    })
+    .didRemove(function(key) {
+      removeFromPlot(key);
     })
     .open();
     </script>

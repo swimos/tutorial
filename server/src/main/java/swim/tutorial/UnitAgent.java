@@ -1,5 +1,6 @@
 package swim.tutorial;
 
+import java.util.Iterator;
 import swim.api.SwimLane;
 import swim.api.agent.AbstractAgent;
 import swim.api.lane.CommandLane;
@@ -17,8 +18,25 @@ public class UnitAgent extends AbstractAgent {
       .isTransient(true)
       .didUpdate((k,n,o) -> {
         logMessage("histogram: replaced " + k + "'s value to " + Recon.toString(n) + " from " + Recon.toString(o));
-        this.histogram.drop(Math.max(0, this.histogram.size() - 100));
+        dropOldData();
       });
+
+
+  private void dropOldData() {
+    final long now = System.currentTimeMillis();
+    final Iterator<Long> iterator = histogram.keyIterator();
+    while(iterator.hasNext()) {
+      long key = iterator.next();
+      if ((now - key) > 2*60*1000L) {
+        // remove items that are older than 2 minutes
+        histogram.remove(key);
+      } else {
+        // map is sorted by the sort order of the keys, so break out of the loop on the first
+        // key that is newer than 2 minutes
+        break;
+      }
+    }
+  }
 
   @SwimLane("history")
   protected final ListLane<Value> history = this.<Value>listLane()
