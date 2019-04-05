@@ -88,7 +88,7 @@ afterEvaluate {
     doFirst {
       classpath = files()
       defaultJvmOpts = [
-        '-Dswim.config=/etc/swim-tutorial/server.recon',
+        '-Dswim.config=/server.recon',
         '-Xms3g',
         '-Xmx3g',
         '--module-path', 'APP_HOME_LIBS',
