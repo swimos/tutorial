@@ -25,6 +25,7 @@ public class TutorialPlane extends AbstractPlane {
     // be done in external processes instead
     final ClientRuntime client = new ClientRuntime();
     client.start();
-    new DataSource(client, "swim://localhost:9001").generate();
+    final DataSource ds = new DataSource(client, "warp://localhost:9001");
+    ds.sendCommands();
   }
 }

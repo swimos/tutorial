@@ -1,7 +1,9 @@
 package swim.tutorial;
 
+import swim.api.downlink.ListDownlink;
 import swim.api.ref.SwimRef;
 import swim.structure.Record;
+import swim.structure.Value;
 
 /**
  * Simple wrapper around some {@code SwimRef}, e.g. a {@code SwimClient} handle,
@@ -17,14 +19,16 @@ class DataSource {
     this.hostUri = hostUri;
   }
 
-  void generate() throws InterruptedException {
+  void sendCommands() throws InterruptedException {
     int indicator = 0;
     while (true) {
       int foo = (int) (Math.random() * 10 - 5) + 30;
       int bar = (int) (Math.random() * 20 - 10) + 60;
       int baz = (int) (Math.random() * 30 - 15) + 90;
       if ((indicator / 25) % 2 == 0) {
-        foo *= 2; bar *= 2; baz *= 2;
+        foo *= 2;
+        bar *= 2;
+        baz *= 2;
       }
       // msg's Recon serialization will take the following form:
       //   "{foo:$foo,bar:$bar,baz:$baz}"
