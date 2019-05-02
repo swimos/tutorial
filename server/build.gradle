@@ -17,7 +17,7 @@ apply plugin: 'idea'
 idea.module.outputDir file("out/production/classes")
 
 group = 'ai.swim'
-description = 'tutorial Web Agents'
+description = 'Tutorial- Web Agents'
 ext.moduleName = 'swim.tutorial'
 sourceCompatibility = 1.9
 version = project.property('application.version')
@@ -76,7 +76,7 @@ afterEvaluate {
     dependsOn jar
     doFirst {
       jvmArgs += [
-        '--module-path', files(configurations.runtimeClasspath, jar.archivePath).asPath,
+        '--module-path', files(configurations.runtimeClasspath, jar.archiveFile).asPath,
         '--module', "${moduleName}/${mainClassName}"
       ]
       classpath = files()

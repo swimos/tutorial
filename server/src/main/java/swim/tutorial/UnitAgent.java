@@ -15,7 +15,6 @@ public class UnitAgent extends AbstractAgent {
 
   @SwimLane("histogram")
   protected final MapLane<Long, Value> histogram = this.<Long, Value>mapLane()
-      .isTransient(true)
       .didUpdate((k,n,o) -> {
         logMessage("histogram: replaced " + k + "'s value to " + Recon.toString(n) + " from " + Recon.toString(o));
         dropOldData();
@@ -40,7 +39,6 @@ public class UnitAgent extends AbstractAgent {
 
   @SwimLane("history")
   protected final ListLane<Value> history = this.<Value>listLane()
-      .isTransient(true)
       .didUpdate((idx, newValue, oldValue) -> {
         logMessage("history: appended {" + idx + ", " + Recon.toString(newValue) + "}");
         final long bucket = newValue.getItem(0).longValue() / 5000 * 5000;
@@ -52,7 +50,6 @@ public class UnitAgent extends AbstractAgent {
 
   @SwimLane("latest")
   protected final ValueLane<Value> latest = this.<Value>valueLane()
-      .isTransient(true)
       .didSet((newValue, oldValue) -> {
         logMessage("latest: set to " + Recon.toString(newValue) + " from " + Recon.toString(oldValue));
         this.history.add(

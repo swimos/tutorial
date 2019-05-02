@@ -2,9 +2,6 @@
   @plane("tutorial") {
     class: "swim.tutorial.TutorialPlane"
   }
-  @store {
-    path: "/tmp/swim-tutorial"
-  }
   @http(port: 9001) {
     plane: "tutorial"
     #documentRoot: "./ui/"
