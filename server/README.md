@@ -2,6 +2,8 @@
 
 Swim unifies the traditionally disparate roles of database, message broker, job manager, and application server, into a few simple constructs.
 
+*Read this in other languages: [English](README.md), [简体中文](README.zh-cn.md)*
+
 ## Web Agents
 
 Swim implements a general purpose distributed object model. The "objects" in this model are **Web Agents**.
