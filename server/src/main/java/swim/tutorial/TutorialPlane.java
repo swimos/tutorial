@@ -1,25 +1,25 @@
 package swim.tutorial;
 
-import java.io.IOException;
 import swim.api.SwimRoute;
-import swim.api.agent.AgentType;
+import swim.api.agent.AgentRoute;
 import swim.api.plane.AbstractPlane;
-import swim.api.server.ServerContext;
 import swim.client.ClientRuntime;
-import swim.loader.ServerLoader;
+import swim.fabric.Fabric;
+import swim.kernel.Kernel;
+import swim.server.ServerLoader;
 
 public class TutorialPlane extends AbstractPlane {
 
   @SwimRoute("/unit/:id")
-  final AgentType<UnitAgent> unitAgent = agentClass(UnitAgent.class);
+  AgentRoute<UnitAgent> unitAgent;
 
-  public static void main(String[] args) throws IOException, InterruptedException {
+  public static void main(String[] args) throws InterruptedException {
+    final Kernel kernel = ServerLoader.loadServer();
+    final Fabric fabric = (Fabric) kernel.getSpace("basic");
 
-    final ServerContext server = ServerLoader.load(TutorialPlane.class.getModule()).serverContext();
-    server.start();
-    System.out.println("Running TutorialPlane...");
-    // Runs asynchronously (relative to the main thread) until termination
-    server.run();
+    kernel.start();
+    System.out.println("Running Tutorial plane...");
+    kernel.run();
 
     // Send data to the above Swim server. Could (and in practice, usually will)
     // be done in external processes instead

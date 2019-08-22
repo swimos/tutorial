@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Swim Gauge</title>
+    <title>Swim Gauge, Pie and Chart</title>
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, shrink-to-fit=no, viewport-fit=cover" />
   </head>
   <body style="display: flex; justify-content: center; align-items: center; width: 100vw; height: 100vh; margin: 0;">
     <div id="app" style="display: flex; width: 67%; height: 67%; flex-direction: column;">
     </div>
-    <script src="https://cdn.swim.ai/js/3.9.0/swim-core.js"></script>
-    <script src="https://cdn.swim.ai/js/3.9.0/swim-ui.js"></script>
-    <script src="https://cdn.swim.ai/js/3.9.0/swim-ux.js"></script>
+    <script src="https://cdn.swimos.org/js/3.10.1/swim-core.js"></script>
+    <script src="https://cdn.swimos.org/js/3.10.1/swim-mesh.js"></script>
+    <script src="https://cdn.swimos.org/js/3.10.1/swim-ui.js"></script>
+    <script src="https://cdn.swimos.org/js/3.10.1/swim-ux.js"></script>
     <script>
 
 const app = new swim.HtmlAppView(document.getElementById("app"));
@@ -26,7 +27,7 @@ const tween = swim.Transition.duration(1000);
 /* Gauge View */
 const gauge = new swim.GaugeView()
     .startAngle(swim.Angle.rad(3 * Math.PI / 4))
-    .deltaAngle(swim.Angle.rad(3 * Math.PI / 2))
+    .sweepAngle(swim.Angle.rad(3 * Math.PI / 2))
     .dialColor("#cccccc")
     .meterColor("#989898")
     .title(new swim.TextRunView("Foo, Bar, Baz").font("20px sans-serif"))

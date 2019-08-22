@@ -1,9 +1,7 @@
 package swim.tutorial;
 
-import swim.api.downlink.ListDownlink;
 import swim.api.ref.SwimRef;
 import swim.structure.Record;
-import swim.structure.Value;
 
 /**
  * Simple wrapper around some {@code SwimRef}, e.g. a {@code SwimClient} handle,

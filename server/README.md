@@ -2,7 +2,7 @@
 
 Swim unifies the traditionally disparate roles of database, message broker, job manager, and application server, into a few simple constructs.
 
-*Read this in other languages: [English](README.md), [简体中文](README.zh-cn.md)*
+*Read this in other languages: [简体中文](README.zh-cn.md)*
 
 ## Web Agents
 
@@ -26,20 +26,20 @@ Visit the [documentation](https://developer.swim.ai/concepts/lanes/) for further
 
 A Swim server is loaded with a **plane**, which provides the runtime for Web Agents and routes messages to the correct lanes.
 
-A plane must [declare an `AgentType` field](http://github.com/swimos/tutorial/tree/master/server/src/main/java/swim/tutorial/TutorialPlane.java#L13-L14) for each Web Agent type.
+A plane must [declare a `SwimRoute` field](http://github.com/swimos/tutorial/tree/master/server/src/main/java/swim/tutorial/TutorialPlane.java#L13-L14) for each Web Agent type.
 
-Use the `ServerLoader` utility class to [load a plane into a Swim server](http://github.com/swimos/tutorial/tree/master/server/src/main/java/swim/tutorial/TutorialPlane.java#L18). Note that your module must [`provide` `swim.api.plane.Plane` with your custom plane class](http://github.com/swimos/tutorial/tree/master/server/src/main/java/module-info.java#L8).
+Use the `ServerLoader` utility class to [load the default kernel modules](http://github.com/swimos/tutorial/tree/master/server/src/main/java/swim/tutorial/TutorialPlane.java#L19).
 
 Visit the [documentation](https://developer.swim.ai/concepts) for further details about these concepts.
 
 ## Populating a Swim Server With Your Data
 
-Every Swim server can be written to and read from by external processes using the Swim API. The simplest way to utilize this API is to use a **Swim client** instance to [send commands to command lanes](http://github.com/swimos/tutorial/blob/master/server/src/main/java/swim/tutorial/DataSource.java#L40).
+Every Swim server can be written to and read from by external processes using the Swim API. The simplest way to utilize this API is to use a **Swim client** instance to [send commands to command lanes](http://github.com/swimos/tutorial/blob/master/server/src/main/java/swim/tutorial/DataSource.java#L42).
 
 Visit the [documentation](https://developer.swim.ai/concepts) for further details about these concepts.
 
 ## Subscribing to Swim Server Data
 
-Swim client instances use Swim **links** to pull data from a Swim lanes. Like their corresponding lanes, links have overridable callback functions that can be used to [populate UIs](http://github.com/swimos/tutorial/tree/master/ui/index.html#L111-L133).
+Swim client instances use Swim **links** to pull data from a Swim lanes. Like their corresponding lanes, links have overridable callback functions that can be used to [populate UIs](http://github.com/swimos/tutorial/tree/master/ui/index.html#L116-L141).
 
 Visit the [documentation](https://developer.swim.ai/concepts/links/) for further details about links.
