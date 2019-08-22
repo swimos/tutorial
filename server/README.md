@@ -28,7 +28,7 @@ A Swim server is loaded with a **plane**, which provides the runtime for Web Age
 
 A plane must [declare a `SwimRoute` field](http://github.com/swimos/tutorial/tree/master/server/src/main/java/swim/tutorial/TutorialPlane.java#L13-L14) for each Web Agent type.
 
-Use the `ServerLoader` utility class to [load the default kernel modules](http://github.com/swimos/tutorial/tree/master/server/src/main/java/swim/tutorial/TutorialPlane.java#L19).
+Use the `ServerLoader` utility class to [load the default kernel modules](http://github.com/swimos/tutorial/tree/master/server/src/main/java/swim/tutorial/TutorialPlane.java#L17).
 
 Visit the [documentation](https://developer.swim.ai/concepts) for further details about these concepts.
 

@@ -6,7 +6,7 @@ Swim is a completely integrated solution for building scalable, end-to-end strea
 
 - A **user interface** that uses Swim's streaming UI frameworks to visualize data from Swim servers in real-time
 
-*Read this in other languages: [English](README.md), [简体中文](README.zh-cn.md)*
+*Read this in other languages: [简体中文](README.zh-cn.md)*
 
 
 ## Run
