@@ -4,23 +4,23 @@ buildscript {
   repositories {
     maven { url 'https://plugins.gradle.org/m2/' }
   }
-  dependencies {
-    classpath 'com.netflix.nebula:gradle-ospackage-plugin:6.1.1'
-  }
 }
 
-apply plugin: 'java'
-apply plugin: 'java-library'
-apply plugin: 'application'
-apply plugin: 'nebula.ospackage-application'
-apply plugin: 'idea'
+plugins {
+  id "java"
+  id "java-library"
+  id "application"
+  id "nebula.ospackage-application" version "8.0.3"
+  id "idea"
+}
+
 idea.module.outputDir file("out/production/classes")
 
 group = 'ai.swim'
 description = 'Tutorial- Web Agents'
 ext.moduleName = 'swim.tutorial'
 sourceCompatibility = 1.9
-version = project.property('application.version')
+version = project.property('swim.version')
 mainClassName = 'swim.tutorial.TutorialPlane'
 
 //def moduleName = 'swim.tutorial'
@@ -28,11 +28,8 @@ def jvmVersion = System.getProperty('java.version').split('\\.')[0] as Integer
 def useModules = jvmVersion >= 9 && !project.hasProperty('no-modules')
 
 repositories {
-  jcenter()
-  maven {
-    url "https://oss.sonatype.org/content/repositories/snapshots/"
-  }
-
+  mavenCentral()
+  maven { url 'https://swimos.bintray.com/maven/' }
 }
 
 dependencies {
@@ -45,7 +42,7 @@ afterEvaluate {
     if (useModules) {
       doFirst {
         options.compilerArgs += [
-          '--module-path', classpath.asPath,
+                '--module-path', classpath.asPath,
         ]
         classpath = files()
       }
@@ -58,9 +55,9 @@ afterEvaluate {
     inputs.property('moduleName', moduleName)
     manifest {
       attributes(
-        'Implementation-Title': moduleName,
-        'Implementation-Version': version,
-        'Main-Class': mainClassName)
+              'Implementation-Title': moduleName,
+              'Implementation-Version': version,
+              'Main-Class': mainClassName)
     }
   }
 
@@ -75,8 +72,8 @@ afterEvaluate {
     dependsOn jar
     doFirst {
       jvmArgs += [
-        '--module-path', files(configurations.runtimeClasspath, jar.archiveFile).asPath,
-        '--module', "${moduleName}/${mainClassName}"
+              '--module-path', files(configurations.runtimeClasspath, jar.archiveFile).asPath,
+              '--module', "${moduleName}/${mainClassName}"
       ]
       classpath = files()
     }
@@ -87,11 +84,11 @@ afterEvaluate {
     doFirst {
       classpath = files()
       defaultJvmOpts = [
-        '-Dswim.config=/server.recon',
-        '-Xms3g',
-        '-Xmx3g',
-        '--module-path', 'APP_HOME_LIBS',
-        '--module', "${moduleName}/${mainClassName}"
+              '-Dswim.config=/server.recon',
+              '-Xms3g',
+              '-Xmx3g',
+              '--module-path', 'APP_HOME_LIBS',
+              '--module', "${moduleName}/${mainClassName}"
       ]
     }
     doLast {
@@ -118,8 +115,8 @@ afterEvaluate {
     preInstall "adduser --quiet --system --ingroup ${project.name} --no-create-home --disabled-password ${project.name}"
     postInstall "systemctl preset ${project.name} > /dev/null 2>&1"
     postInstall "systemctl start ${project.name} > /dev/null 2>&1"
-    preUninstall  "systemctl disable ${project.name} > /dev/null 2>&1"
-    preUninstall  "systemctl stop ${project.name} > /dev/null 2>&1"
+    preUninstall "systemctl disable ${project.name} > /dev/null 2>&1"
+    preUninstall "systemctl stop ${project.name} > /dev/null 2>&1"
     postUninstall "systemctl daemon-reload > /dev/null 2>&1"
 
     from('pkg') {

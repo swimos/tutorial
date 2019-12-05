@@ -4,18 +4,16 @@ import swim.api.SwimRoute;
 import swim.api.agent.AgentRoute;
 import swim.api.plane.AbstractPlane;
 import swim.client.ClientRuntime;
-import swim.fabric.Fabric;
 import swim.kernel.Kernel;
 import swim.server.ServerLoader;
 
 public class TutorialPlane extends AbstractPlane {
 
   @SwimRoute("/unit/:id")
-  AgentRoute<UnitAgent> unitAgent;
+  private AgentRoute<UnitAgent> unitAgent;
 
   public static void main(String[] args) throws InterruptedException {
     final Kernel kernel = ServerLoader.loadServer();
-    final Fabric fabric = (Fabric) kernel.getSpace("basic");
 
     kernel.start();
     System.out.println("Running Tutorial plane...");
@@ -28,4 +26,5 @@ public class TutorialPlane extends AbstractPlane {
     final DataSource ds = new DataSource(client, "warp://localhost:9001");
     ds.sendCommands();
   }
+
 }
