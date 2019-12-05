@@ -3,7 +3,6 @@ package swim.tutorial;
 import swim.api.SwimRoute;
 import swim.api.agent.AgentRoute;
 import swim.api.plane.AbstractPlane;
-import swim.api.space.Space;
 import swim.client.ClientRuntime;
 import swim.kernel.Kernel;
 import swim.server.ServerLoader;
@@ -11,7 +10,7 @@ import swim.server.ServerLoader;
 public class TutorialPlane extends AbstractPlane {
 
   @SwimRoute("/unit/:id")
-  AgentRoute<UnitAgent> unitAgent;
+  private AgentRoute<UnitAgent> unitAgent;
 
   public static void main(String[] args) throws InterruptedException {
     final Kernel kernel = ServerLoader.loadServer();
