@@ -28,11 +28,9 @@ def jvmVersion = System.getProperty('java.version').split('\\.')[0] as Integer
 def useModules = jvmVersion >= 9 && !project.hasProperty('no-modules')
 
 repositories {
-  jcenter()
-  maven {
-    url "https://oss.sonatype.org/content/repositories/snapshots/"
-  }
-
+  mavenCentral()
+  maven { url 'https://swimos.bintray.com/maven/' }
+  maven { url 'http://packages.confluent.io/maven/' }
 }
 
 dependencies {
