@@ -4,16 +4,16 @@ buildscript {
     repositories {
         maven { url 'https://plugins.gradle.org/m2/' }
     }
-    dependencies {
-        classpath 'com.netflix.nebula:gradle-ospackage-plugin:6.1.1'
-    }
 }
 
-apply plugin: 'java'
-apply plugin: 'java-library'
-apply plugin: 'application'
-apply plugin: 'nebula.ospackage-application'
-apply plugin: 'idea'
+plugins {
+    id "java"
+    id "java-library"
+    id "application"
+    id "nebula.ospackage-application" version "8.0.3"
+    id "idea"
+}
+
 idea.module.outputDir file("out/production/classes")
 
 group = 'ai.swim'
