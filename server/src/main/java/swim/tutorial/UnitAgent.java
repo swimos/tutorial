@@ -19,6 +19,7 @@ public class UnitAgent extends AbstractAgent {
         logMessage("histogram: replaced " + k + "'s value to " + Recon.toString(n) + " from " + Recon.toString(o));
         dropOldData();
       });
+
   @SwimLane("history")
   private final ListLane<Value> history = this.<Value>listLane()
       .didUpdate((idx, newValue, oldValue) -> {
@@ -29,6 +30,7 @@ public class UnitAgent extends AbstractAgent {
         final int willDrop = Math.max(0, this.history.size() - 200);
         this.history.drop(willDrop);
       });
+
   @SwimLane("latest")
   private final ValueLane<Value> latest = this.<Value>valueLane()
       .didSet((newValue, oldValue) -> {
@@ -39,6 +41,7 @@ public class UnitAgent extends AbstractAgent {
                 .item(newValue)
         );
       });
+
   @SwimLane("publish")
   public final CommandLane<Value> publish = this.<Value>commandLane()
       .onCommand(v -> {
