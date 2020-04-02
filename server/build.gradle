@@ -29,7 +29,7 @@ def useModules = jvmVersion >= 9 && !project.hasProperty('no-modules')
 
 repositories {
   mavenCentral()
-  maven { url 'https://swimos.bintray.com/maven/' }
+  jcenter()
 }
 
 dependencies {
