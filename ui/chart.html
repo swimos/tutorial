@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Swim Chart</title>
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, shrink-to-fit=no, viewport-fit=cover" />
+  </head>
+  <body style="display: flex; justify-content: center; align-items: center; width: 100vw; height: 100vh; margin: 0;">
+    <div id="app" style="display: flex; width: 67%; height: 67%; flex-direction: column;">
+    </div>
+    <script src="https://cdn.swimos.org/js/3.10.2/swim-system.js"></script>
+    <script>
+
+const app = new swim.HtmlAppView(document.getElementById("app"));
+
+const chartCanvas = app.append('div').position('relative').append("canvas");
+
+const tween = swim.Transition.duration(1000);
+
+/* Chart View */
+const chart = new swim.ChartView()
+    .bottomAxis(swim.AxisView.bottom("time"))
+    .leftAxis(swim.AxisView.left("0...120"))
+    .domainColor("#4a4a4a")
+    .tickMarkColor("#4a4a4a")
+    .font("12px sans-serif")
+    .textColor("#4a4a4a");
+chartCanvas.append(chart);
+
+const plot = new swim.LineGraphView()
+    .stroke("#50e3c2")
+    .strokeWidth(2);
+chart.addPlot(plot);
+
+function addToPlot(key, value) {
+  const time = key.numberValue();
+  const v = value.get("count").numberValue(0);
+  plot.insertDatum({x: time, y: v, opacity: void 0});
+}
+
+function removeFromPlot(key) {
+  const time = key.numberValue();
+  plot.removeDatum(time);
+}
+
+const histogramLink = swim.downlinkMap()
+    .hostUri("warp://localhost:9001")
+    .nodeUri("/unit/master")
+    .laneUri("histogram")
+    .didUpdate(function(key, value) {
+      addToPlot(key, value);
+    })
+    .didRemove(function(key) {
+      removeFromPlot(key);
+    })
+    .open();
+    </script>
+  </body>
+</html>

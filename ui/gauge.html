@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Swim Gauge</title>
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, shrink-to-fit=no, viewport-fit=cover" />
+  </head>
+  <body style="display: flex; justify-content: center; align-items: center; width: 100vw; height: 100vh; margin: 0;">
+    <div id="app" style="display: flex; width: 67%; height: 67%; flex-direction: column;">
+    </div>
+    <script src="https://cdn.swimos.org/js/3.10.2/swim-system.js"></script>
+    <script>
+
+const app = new swim.HtmlAppView(document.getElementById("app"));
+
+const gaugeCanvas = app.append('div').position('relative').append("canvas");
+
+const tween = swim.Transition.duration(1000);
+
+/* Gauge View */
+const gauge = new swim.GaugeView()
+    .startAngle(swim.Angle.rad(3 * Math.PI / 4))
+    .sweepAngle(swim.Angle.rad(3 * Math.PI / 2))
+    .dialColor("#cccccc")
+    .meterColor("#989898")
+    .title(new swim.TextRunView("Foo, Bar, Baz").font("20px sans-serif"))
+    .font("14px sans-serif")
+    .textColor("#4a4a4a");
+gaugeCanvas.append(gauge);
+
+const fooDial = new swim.DialView()
+    .label("FOO");
+gauge.setChildView("foo", fooDial);
+
+const barDial = new swim.DialView()
+    .label("BAR");
+gauge.setChildView("bar", barDial);
+
+const bazDial = new swim.DialView()
+    .label("BAZ");
+gauge.setChildView("baz", bazDial);
+
+function updateDial(dial, max, key, value) {
+  const v = value.get(key).numberValue();
+  const percent = v / max;
+  const legend = key + ": " + (v) + " out of " + max;
+  dial.value(v, tween)
+      .total(max)
+      .meterColor(percent < 0.5 ? "#989898" : percent < 0.9 ? "#4a4a4a" : "#000000", tween);
+  dial.label().text(legend);
+}
+
+/* Data Subscriptions */
+const valueLink = swim.downlinkValue()
+    .hostUri("warp://localhost:9001")
+    .nodeUri("/unit/master")
+    .laneUri("latest")
+    .didSet(function (value) {
+      updateDial(fooDial, 70, "foo", value);
+      updateDial(barDial, 140, "bar", value);
+      updateDial(bazDial, 210, "baz", value);
+    })
+    .open();
+
+    </script>
+  </body>
+</html>

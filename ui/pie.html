@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Swim Pie</title>
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, shrink-to-fit=no, viewport-fit=cover" />
+  </head>
+  <body style="display: flex; justify-content: center; align-items: center; width: 100vw; height: 100vh; margin: 0;">
+    <div id="app" style="display: flex; width: 67%; height: 67%; flex-direction: column;">
+    </div>
+    <script src="https://cdn.swimos.org/js/3.10.2/swim-system.js"></script>
+    <script>
+
+const app = new swim.HtmlAppView(document.getElementById("app"));
+
+const pieCanvas = app.append('div').position('relative').append("canvas");
+
+const tween = swim.Transition.duration(1000);
+
+/* Pie View */
+const sliceColors = [swim.Color.parse("#00a6ed"),
+    swim.Color.parse("#6acd00"),
+    swim.Color.parse("#c200fa")];
+const pie = new swim.PieView()
+    // .innerRadius("15%")
+    .outerRadius("25%")
+    .tickColor("#b7b7b7")
+    .font("14px sans-serif")
+    .textColor("#4a4a4a");
+pieCanvas.append(pie);
+const pieIndices = {"foo": 0, "bar": 1, "baz": 2};
+
+function updateSlice(key, value) {
+  const v = value.get(key).numberValue();
+  let slice = pie.getChildView(key);
+  if (slice) {
+    slice.value(v, tween);
+    slice.label().text(v);
+  } else {
+    const sliceColor = sliceColors[pieIndices[key]];
+    slice = new swim.SliceView()
+        .value(v)
+        .sliceColor(sliceColor)
+        .label(v.toFixed())
+        .legend(key);
+    pie.setChildView(key, slice);    
+  }
+}
+
+/* Data Subscriptions */
+const valueLink = swim.downlinkValue()
+    .hostUri("warp://localhost:9001")
+    .nodeUri("/unit/master")
+    .laneUri("latest")
+    .didSet(function (value) {
+      updateSlice("foo", value);
+      updateSlice("bar", value);
+      updateSlice("baz", value);
+    })
+    .open();
+
+    </script>
+  </body>
+</html>
