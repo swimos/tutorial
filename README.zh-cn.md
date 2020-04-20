@@ -15,12 +15,12 @@ Swim 是建造可规模化扩展的，终端到终端的流式（streaming）应
   * 确保您的`JAVA_HOME`环境变量设置指向您的Java安装地址。
   * 确保您的`PATH`包含`$JAVA_HOME`。
 
-* 从控制盘（console）进入	`server` 目录，运行 `./gradlew run` （Windows操作系统运行`.\gradlew.bat run`） 来启动Swim伺服器（server）。
+* 从控制台（console）进入	`server` 目录，运行 `./gradlew run` （Windows操作系统运行`.\gradlew.bat run`） 来启动Swim伺服器（server）。
 
-* 然后在浏览器中打开 `ui/index.html`即可看到与伺服器相连的UI。
+* 然后可在浏览器中分别打开 `ui/chart.html`, `ui/gauge.html`, 和 `ui/pie.html` 即可看到不同的 UI 实时部件。
 
 ## 如何运作
 
-浏览 [伺服器（server）](https://github.com/swimos/tutorial/blob/master/server)学习如何建立和处理在Swim伺服器（server）上的数据。
+浏览 [伺服器（server）](https://github.com/swimos/tutorial/tree/master/server)学习如何建立和处理在Swim伺服器（server）上的数据。
 
-接着，浏览 [操作界面（ui）](https://github.com/swimos/tutorial/blob/master/ui) 来学习与众不同的Swim视觉化数据处理。
+接着，浏览 [操作界面（ui）](https://github.com/swimos/tutorial/tree/master/ui) 来学习与众不同的Swim视觉化数据处理。
