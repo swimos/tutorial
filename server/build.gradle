@@ -11,12 +11,9 @@ plugins {
   id "java-library"
   id "application"
   id "nebula.ospackage-application" version "8.0.3"
-  id "idea"
 }
 
-idea.module.outputDir file("out/production/classes")
-
-group = 'ai.swim'
+group = 'org.swimos'
 description = 'Tutorial- Web Agents'
 ext.moduleName = 'swim.tutorial'
 sourceCompatibility = 1.9
@@ -38,11 +35,18 @@ dependencies {
 }
 
 afterEvaluate {
+
+  sourceSets {
+    main.output.resourcesDir = main.java.outputDir
+  }
+
   compileJava {
     if (useModules) {
       doFirst {
         options.compilerArgs += [
                 '--module-path', classpath.asPath,
+                '--patch-module', "$moduleName="
+                        + files(sourceSets.main.resources.srcDirs).asPath,
         ]
         classpath = files()
       }
