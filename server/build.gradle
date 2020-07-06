@@ -10,7 +10,7 @@ plugins {
   id "java"
   id "java-library"
   id "application"
-  id "nebula.ospackage-application" version "8.0.3"
+  id "nebula.ospackage-application" version "8.3.0"
 }
 
 group = 'org.swimos'
