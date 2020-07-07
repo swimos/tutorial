@@ -39,7 +39,14 @@ class DataSource {
       //   *CommandLane* addressable by "publish" OF the
       //   *Web Agent* addressable by "/unit/master" RUNNING ON the
       //   *(Swim) server* addressable by hostUri
-      this.ref.command(this.hostUri, "/unit/master", "publish", msg);
+      this.ref.command(this.hostUri, "/unit/master1", "publish", msg);
+      
+      // add agents by following the format of the hostURI specified in TutorialPlane
+      // line 12: @SwimRoute("/unit/:id")
+      
+      // this.ref.command(this.hostUri, "/unit/master2", "publish", msg);
+      // this.ref.command(this.hostUri, "/unit/master3", "publish", msg);
+      
       indicator = (indicator + 1) % 1000;
 
       // Throttle events to four every three seconds
