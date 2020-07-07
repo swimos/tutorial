@@ -10,6 +10,11 @@ Swim implements a general purpose distributed object model. The "objects" in thi
 
 [Creating a class](http://github.com/swimos/tutorial/tree/master/server/src/main/java/swim/tutorial/UnitAgent.java#L13) that extends `swim.api.agent.AbstractAgent` defines a *template* for Web Agents (though not a useful one until we add some [lanes](#lanes)).
 
+#### *Try it yourself:* 
+- [ ] *Navigate to [swim.tutorial.DataSource.java](https://github.com/swimos/tutorial/blob/master/server/src/main/java/swim/tutorial/DataSource.java)*
+- [ ] *Create additional web agents using the instructions in the code*
+- [ ] *Compare your answer with those in the [**tutorial_solutions**](https://github.com/swimos/tutorial/tree/tutorial_solutions) branch*
+
 Visit the [documentation](https://developer.swim.ai/concepts/agents/) for further details about Web Agents.
 
 ## Lanes
