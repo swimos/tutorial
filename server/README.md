@@ -25,6 +25,12 @@ Continuing our analogy, *lane callback* functions serve as the "methods" of Web 
 
 Each lane type defines a set of overridable (default no-op) lifecycle callbacks. For example, [sending a command message](#sending-data-do-swim) to any command lane will trigger its [`onCommand` callback](http://github.com/swimos/tutorial/tree/master/server/src/main/java/swim/tutorial/UnitAgent.java#L51-L54). On the other hand, [setting a value lane](http://github.com/swimos/tutorial/tree/master/server/src/main/java/swim/tutorial/UnitAgent.java#L53) will trigger its `willSet` callback, then update its value, then trigger its [`didSet` callback](http://github.com/swimos/tutorial/tree/master/server/src/main/java/swim/tutorial/UnitAgent.java#L40-L47).
 
+#### *Try it yourself:* 
+- [ ] *Navigate to [swim.tutorial.UnitAgent.java](https://github.com/swimos/tutorial/blob/master/server/src/main/java/swim/tutorial/UnitAgent.java)*
+- [ ] *Fill in the remaining code to create a new value lane called `stats` which gets populated by changes to the `histogram` map lane*
+- [ ] *Experiment with ways to transform the data entries in histogram. Ideas: mean, median, range, standard deviation, variance, etc!*
+- [ ] *Compare your answer with those in the [**tutorial_solutions**](https://github.com/swimos/tutorial/tree/tutorial_solutions) branch*
+
 Visit the [documentation](https://developer.swim.ai/concepts/lanes/) for further details about lanes.
 
 ## Standing a Swim Server
