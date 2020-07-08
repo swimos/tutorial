@@ -46,7 +46,7 @@ class DataSource {
       
       // TODO: Create two new web agents using the above format
       
-      // EXAMPLE SOLUTION:
+   // ***** EXAMPLE SOLUTION ******
       // this.ref.command(this.hostUri, "/unit/secondAgent", "publish", msg);
       // this.ref.command(this.hostUri, "/unit/thirdAgent", "publish", msg);
       
