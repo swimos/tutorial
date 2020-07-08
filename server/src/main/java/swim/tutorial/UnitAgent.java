@@ -16,7 +16,6 @@ public class UnitAgent extends AbstractAgent {
 	  private long count_sum = 0;
 	  private int count_total = 0;
 	  private int index = 0;
-	  private long local_sum = 0;
 	  private long[] recent_data = new long[5];
 	  
 	  
@@ -32,11 +31,17 @@ public class UnitAgent extends AbstractAgent {
 	    logMessage("stats_2: local median (last 5 entries) updated to " + n + " from " + o);
 	  });
 	  
-//	  @SwimLane("stats_3")
-//	  private final ValueLane<Long> stats_3 = this.<Long>valueLane()
-//	  .didSet((n, o) -> {
-//	    logMessage("stats_3: local ___ (last 5 entries) updated to " + n + " from " + o);
-//	  });
+	  @SwimLane("stats_3")
+	  private final ValueLane<Long> stats_3 = this.<Long>valueLane()
+	  .didSet((n, o) -> {
+	    logMessage("stats_3: local variance (last 5 entries) updated to " + n + " from " + o);
+	  });
+	  
+	  @SwimLane("stats_4")
+	  private final ValueLane<Long> stats_4 = this.<Long>valueLane()
+	  .didSet((n, o) -> {
+	    logMessage("stats_4: local std deviation (last 5 entries) updated to " + n + " from " + o);
+	  });
 	
 	
 	  @SwimLane("histogram")
@@ -50,7 +55,7 @@ public class UnitAgent extends AbstractAgent {
 	        final long avg = count_sum / count_total;
 	        stats_1.set(avg);
 	        
-	        // appending new data too the recent_data array
+	        // appending new data to the recent_data array
 	        if (index >= recent_data.length-1) {
 	        	index = 0;
 	        }
@@ -58,10 +63,20 @@ public class UnitAgent extends AbstractAgent {
 	        index ++;
 	        
 	        // calculating local mean to send to stats2
-	        local_sum = 0;
+	        long local_sum = 0;
 	        for (long d : recent_data) local_sum += d;
 	        final long local_avg = local_sum / (long) recent_data.length;
 	        stats_2.set(local_avg);
+	        
+	        // calculating local variance to send to stats3
+	        long squared_dif_sum = 0; // (sum of local mean - each value)^2
+	        for (long d : recent_data) squared_dif_sum += (d - local_avg)*(d - local_avg);
+	        long local_variance = squared_dif_sum/recent_data.length;
+	        stats_3.set(local_variance);
+	        
+	        // calculating local standard deviation to send to stats4
+	        double local_std_dev = Math.sqrt(local_variance);
+	        stats_4.set((long)local_std_dev);
 	        
 	        dropOldData();
 	      })
