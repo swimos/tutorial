@@ -13,7 +13,8 @@ import java.util.Iterator;
 
 public class UnitAgent extends AbstractAgent {
 	
-	// ***** EXAMPLE SOLUTION ******
+	  // *********************** EXAMPLE SOLUTIONS FOR STATS LANE ***********************
+	  
 	  // instance variables to track metrics going into stats
 	  private long count_sum = 0;
 	  private int count_total = 0;
@@ -45,7 +46,7 @@ public class UnitAgent extends AbstractAgent {
 	    logMessage("stats_4: local std deviation (last 5 entries) updated to " + n + " from " + o);
 	  });
 	
-	
+	  // *********************** EXAMPLE SOLUTION FOR HISTOGRAM ***********************
 	  @SwimLane("histogram")
 	  private final MapLane<Long, Value> histogram = this.<Long, Value>mapLane()
 	      .didUpdate((k, n, o) -> {
@@ -83,42 +84,13 @@ public class UnitAgent extends AbstractAgent {
 	        dropOldData();
 	      })
 	      .didRemove((k,o) -> {
-	        // update stats with remove logic
 	    	  logMessage("histogram: removed <" + k + "," + Recon.toString(o) + ">");
 	    	  count_sum = 0;
 	    	  count_total = 0;
 	    	  index = 0;
 	      });
 	  
-	
-	
-  // ***** TUTORIAL TEMPLATE ******
-	
-//  // TODO: complete the stats Value Lane
-//  // @SwimLane("stats")
-//	
-//  // HINT: Use the valueLane() method to instantiate the lane
-//  // HINT: Use the .didSet() lifecycle callback to log a message showing updates to stats
-//	
-//   @SwimLane("histogram")
-//   private final MapLane<Long, Value> histogram = this.<Long, Value>mapLane()
-//       .didUpdate((k, n, o) -> {
-//         logMessage("histogram: replaced " + k + "'s value to " + Recon.toString(n) + " from " + Recon.toString(o));
-//         // TODO: update stats with update logic
-//         
-//         // HINT: access new data sent to histogram with 
-//         		// n.getItem(0).longValue()
-//         // HINT: use this data to calculate stats such as mean, variance, std dev, etc
-//         // HINT: send new data to stats lane by calling 
-//         		// stats.set($TRANSFORMED_DATA)
-//         
-//		 dropOldData();
-//
-//       })
-//       .didRemove((k,o) -> {
-//        // TODO: update stats with remove logic
-//
-//       });
+	  	// ****************************************************************************
 		  
   @SwimLane("history")
   private final ListLane<Value> history = this.<Value>listLane()

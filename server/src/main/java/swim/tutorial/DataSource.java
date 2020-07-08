@@ -40,15 +40,13 @@ class DataSource {
       //   *Web Agent* addressable by "/unit/master" RUNNING ON the
       //   *(Swim) server* addressable by hostUri
       this.ref.command(this.hostUri, "/unit/master", "publish", msg);
+            
+      // *********************** EXAMPLE SOLUTION ***********************
       
-      // To instantiate more agents, follow the format of the URI pattern specified in TutorialPlane
-      //   see line 12: @SwimRoute("/unit/:id")
+      this.ref.command(this.hostUri, "/unit/secondAgent", "publish", msg);
+      this.ref.command(this.hostUri, "/unit/thirdAgent", "publish", msg);
       
-      // TODO: Create two new web agents using the above format
-      
-   // ***** EXAMPLE SOLUTION ******
-      // this.ref.command(this.hostUri, "/unit/secondAgent", "publish", msg);
-      // this.ref.command(this.hostUri, "/unit/thirdAgent", "publish", msg);
+      // ****************************************************************
       
       indicator = (indicator + 1) % 1000;
 
