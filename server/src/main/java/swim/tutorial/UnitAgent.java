@@ -15,12 +15,28 @@ public class UnitAgent extends AbstractAgent {
 	  // instance variables to track metrics going into stats
 	  private long count_sum = 0;
 	  private int count_total = 0;
+	  private int index = 0;
+	  private long local_sum = 0;
+	  private long[] recent_data = new long[5];
 	  
-	  @SwimLane("stats")
-	  private final ValueLane<Long> stats = this.<Long>valueLane()
+	  
+	  @SwimLane("stats_1")
+	  private final ValueLane<Long> stats_1 = this.<Long>valueLane()
 	  .didSet((n, o) -> {
-	    logMessage("stats: mean updated to " + n + " from " + o);
+	    logMessage("stats_1: mean updated to " + n + " from " + o);
 	  });
+	  
+	  @SwimLane("stats_2")
+	  private final ValueLane<Long> stats_2 = this.<Long>valueLane()
+	  .didSet((n, o) -> {
+	    logMessage("stats_2: local median (last 5 entries) updated to " + n + " from " + o);
+	  });
+	  
+//	  @SwimLane("stats_3")
+//	  private final ValueLane<Long> stats_3 = this.<Long>valueLane()
+//	  .didSet((n, o) -> {
+//	    logMessage("stats_3: local ___ (last 5 entries) updated to " + n + " from " + o);
+//	  });
 	
 	
 	  @SwimLane("histogram")
@@ -28,17 +44,24 @@ public class UnitAgent extends AbstractAgent {
 	      .didUpdate((k, n, o) -> {
 	        logMessage("histogram: replaced " + k + "'s value to " + Recon.toString(n) + " from " + Recon.toString(o));
 	        
-	        // calculating mean to send to stats
+	        // calculating overall mean to send to stats1
 	        count_sum += n.getItem(0).longValue();
-	        // logMessage(count_sum);
-	        
 	        count_total ++;
-	        // logMessage(count_total);
-	        
 	        final long avg = count_sum / count_total;
-	        // logMessage(avg);
+	        stats_1.set(avg);
 	        
-	        stats.set(avg);
+	        // appending new data too the recent_data array
+	        if (index >= recent_data.length-1) {
+	        	index = 0;
+	        }
+	        recent_data[index] = n.getItem(0).longValue();
+	        index ++;
+	        
+	        // calculating local mean to send to stats2
+	        local_sum = 0;
+	        for (long d : recent_data) local_sum += d;
+	        final long local_avg = local_sum / (long) recent_data.length;
+	        stats_2.set(local_avg);
 	        
 	        dropOldData();
 	      })
@@ -47,6 +70,7 @@ public class UnitAgent extends AbstractAgent {
 	    	  logMessage("histogram: removed <" + k + "," + Recon.toString(o) + ">");
 	    	  count_sum = 0;
 	    	  count_total = 0;
+	    	  index = 0;
 	      });
 	  
 	
