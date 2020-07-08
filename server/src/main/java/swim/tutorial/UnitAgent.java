@@ -92,25 +92,31 @@ public class UnitAgent extends AbstractAgent {
 	
 	// tutorial outline
 	
-//  // TODO: complete the stats Value Lane
-//  // @SwimLane("stats")
-//	
-//  // HINT: Use the valueLane() method to instantiate the lane
-//  // HINT: Use the .didSet() lifecycle callback to log a message showing updates to stats
-//	
-//   @SwimLane("histogram")
-//   private final MapLane<Long, Value> histogram = this.<Long, Value>mapLane()
-//       .didUpdate((k, n, o) -> {
-//         logMessage("histogram: replaced " + k + "'s value to " + Recon.toString(n) + " from " + Recon.toString(o));
-//         // TODO: update stats with update logic
-//         
-//		 dropOldData();
-//
-//       })
-//       .didRemove((k,o) -> {
-//        // TODO: update stats with remove logic
-//
-//       });
+  // TODO: complete the stats Value Lane
+  // @SwimLane("stats")
+	
+  // HINT: Use the valueLane() method to instantiate the lane
+  // HINT: Use the .didSet() lifecycle callback to log a message showing updates to stats
+	
+   @SwimLane("histogram")
+   private final MapLane<Long, Value> histogram = this.<Long, Value>mapLane()
+       .didUpdate((k, n, o) -> {
+         logMessage("histogram: replaced " + k + "'s value to " + Recon.toString(n) + " from " + Recon.toString(o));
+         // TODO: update stats with update logic
+         
+         // HINT: access new data sent to histogram with 
+         		// n.getItem(0).longValue()
+         // HINT: use this data to calculate stats such as mean, variance, std dev, etc
+         // HINT: send new data to stats lane by calling 
+         		// stats.set($TRANSFORMED_DATA)
+         
+		 dropOldData();
+
+       })
+       .didRemove((k,o) -> {
+        // TODO: update stats with remove logic
+
+       });
 		  
   @SwimLane("history")
   private final ListLane<Value> history = this.<Value>listLane()
