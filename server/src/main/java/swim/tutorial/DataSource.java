@@ -44,9 +44,9 @@ class DataSource {
       // To instantiate more agents, follow the format of the URI pattern specified in TutorialPlane
       //   see line 12: @SwimRoute("/unit/:id")
       
-      // TODO: create two new web agents using the above format
+      // TODO: Create two new web agents using the above format
       
-      // EXAMPLES:
+      // EXAMPLE SOLUTION:
       // this.ref.command(this.hostUri, "/unit/secondAgent", "publish", msg);
       // this.ref.command(this.hostUri, "/unit/thirdAgent", "publish", msg);
       
