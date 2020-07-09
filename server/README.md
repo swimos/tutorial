@@ -54,3 +54,10 @@ Visit the [documentation](https://developer.swim.ai/concepts) for further detail
 Swim client instances use Swim **links** to pull data from a Swim lanes. Like their corresponding lanes, links have overridable callback functions that can be used to [populate UIs](http://github.com/swimos/tutorial/tree/master/ui/index.html#L116-L141).
 
 Visit the [documentation](https://developer.swim.ai/concepts/links/) for further details about links.
+
+## *Visualizing Your Changes in the UI*
+
+- [ ] *Consider how the above changes to the server code may change the way you'd want to visualize your data*
+- [ ] *Navigate to the [ui folder](https://github.com/swimos/tutorial/tree/master/ui)*
+- [ ] *Experiment with the UI code to accommodate for your server-side changes*
+- [ ] *See the [**tutorial_solutions**](https://github.com/swimos/tutorial/tree/tutorial_solutions) branch for an example of this*
