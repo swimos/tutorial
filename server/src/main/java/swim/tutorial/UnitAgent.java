@@ -22,6 +22,7 @@ public class UnitAgent extends AbstractAgent {
 	  private long[] recent_data = new long[5];
 	  
 	  
+	  // intermediary lanes that represent individual metrics
 	  @SwimLane("stats_1")
 	  private final ValueLane<Long> stats_1 = this.<Long>valueLane()
 	  .didSet((n, o) -> {
@@ -44,6 +45,15 @@ public class UnitAgent extends AbstractAgent {
 	  private final ValueLane<Long> stats_4 = this.<Long>valueLane()
 	  .didSet((n, o) -> {
 	    logMessage("stats_4: local std deviation (last 5 entries) updated to " + n + " from " + o);
+	  });
+	  
+	  
+	  // TODO: combine all calculations into one swimlane of type Value
+	  
+	  @SwimLane("stats")
+	  private final ValueLane<Value> stats = this.<Value>valueLane()
+	  .didSet((n, o) -> {
+		  logMessage("stats: set to " + Recon.toString(n) + " from " + Recon.toString(o));
 	  });
 	
 	  // *********************** EXAMPLE SOLUTION FOR HISTOGRAM ***********************
@@ -78,12 +88,20 @@ public class UnitAgent extends AbstractAgent {
 	        stats_3.set(local_variance);
 	        
 	        // calculating local standard deviation to send to stats4
-	        double local_std_dev = Math.sqrt(local_variance);
-	        stats_4.set((long)local_std_dev);
+	        long local_std_dev = (long)Math.sqrt(local_variance);
+	        stats_4.set(local_std_dev);
+	        
+	        // Consolidating all data to the valuelane stats of type value
+	        
+	        Value all_stats = Record.create(4).slot("avg", avg).slot("local_avg", local_avg).slot("local_variance", local_variance).slot("local_std_dev", local_std_dev);
+	        // build new Record.create(4).slot("") etc
+	        stats.set(all_stats); 
+	        // TODO: ask how to combine the Longs from each stats_# above into one Value in stats
 	        
 	        dropOldData();
 	      })
 	      .didRemove((k,o) -> {
+	    	  // TODO: stats.put(stats.get()-o)
 	    	  logMessage("histogram: removed <" + k + "," + Recon.toString(o) + ">");
 	    	  count_sum = 0;
 	    	  count_total = 0;
