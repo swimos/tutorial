@@ -5,54 +5,114 @@
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, shrink-to-fit=no, viewport-fit=cover" />
   </head>
   <body style="display: flex; justify-content: center; align-items: center; width: 100vw; height: 100vh; margin: 0;">
+
     <div id="app" style="display: flex; width: 67%; height: 67%; flex-direction: column;">
     </div>
+
+    <div>
+      <label for="agents">Choose a web agent:</label>
+
+      <select name="agents" id="web_agent_select" onchange="update(this.value)">
+        <option value="/unit/master" style = "color:#50e3c2">/unit/master</option>
+        <option value="/unit/secondAgent" style = "color:#3c52f0">/unit/secondAgent</option>
+        <option value="/unit/thirdAgent" style = "color:#212326">/unit/thirdAgent</option>
+      </select>
+    </div>
+
     <script src="https://cdn.swimos.org/js/3.10.2/swim-system.js"></script>
     <script>
 
-const app = new swim.HtmlAppView(document.getElementById("app"));
+    const app = new swim.HtmlAppView(document.getElementById("app"));
 
-const chartCanvas = app.append('div').position('relative').append("canvas");
+    const chartCanvas = app.append('div').position('relative').append("canvas");
 
-const tween = swim.Transition.duration(1000);
+    const tween = swim.Transition.duration(1000);
 
-/* Chart View */
-const chart = new swim.ChartView()
-    .bottomAxis(swim.AxisView.bottom("time"))
-    .leftAxis(swim.AxisView.left("0...120"))
-    .domainColor("#4a4a4a")
-    .tickMarkColor("#4a4a4a")
-    .font("12px sans-serif")
-    .textColor("#4a4a4a");
-chartCanvas.append(chart);
+    /* Chart View */
+    const chart = new swim.ChartView()
+        .bottomAxis(swim.AxisView.bottom("time"))
+        .leftAxis(swim.AxisView.left("0...120"))
+        .domainColor("#4a4a4a")
+        .tickMarkColor("#4a4a4a")
+        .font("12px sans-serif")
+        .textColor("#4a4a4a");
+    chartCanvas.append(chart);
 
-const plot = new swim.LineGraphView()
-    .stroke("#50e3c2")
-    .strokeWidth(2);
-chart.addPlot(plot);
+    const plot = new swim.LineGraphView()
+        .stroke("#50e3c2")
+        .strokeWidth(2);
+    chart.addPlot(plot);
 
-function addToPlot(key, value) {
-  const time = key.numberValue();
-  const v = value.get("count").numberValue(0);
-  plot.insertDatum({x: time, y: v, opacity: void 0});
-}
+    function addToPlot(key, value) {
+      const time = key.numberValue();
+      const v = value.get("count").numberValue(0);
+      plot.insertDatum({x: time, y: v, opacity: void 0});
+    }
 
-function removeFromPlot(key) {
-  const time = key.numberValue();
-  plot.removeDatum(time);
-}
+    function removeFromPlot(key) {
+      const time = key.numberValue();
+      plot.removeDatum(time);
+    }
 
-const histogramLink = swim.downlinkMap()
-    .hostUri("warp://localhost:9001")
-    .nodeUri("/unit/master")
-    .laneUri("histogram")
-    .didUpdate(function(key, value) {
-      addToPlot(key, value);
-    })
-    .didRemove(function(key) {
-      removeFromPlot(key);
-    })
-    .open();
+    // Allowing for Web Agent selection by html dropdown menu
+
+    var agent_URI = "/unit/master";
+
+    // runs once
+    var histogramLink = swim.downlinkMap()
+        .hostUri("warp://localhost:9001")
+        .nodeUri(agent_URI)
+        .laneUri("histogram")
+        .didUpdate(function(key, value) {
+          addToPlot(key, value);
+        })
+        .didRemove(function(key) {
+          removeFromPlot(key);
+        })
+        .open();
+
+
+    // update logic runs whenever a new dropdown option is selected
+    function update(val) {
+      if (histogramLink) {
+        // close downlink on update
+        histogramLink.close();
+
+        // update the node URI used in histogramLink to match the selected agent
+        agent_URI = document.getElementById('web_agent_select').value;
+        console.log(agent_URI);
+
+        histogramLink = swim.downlinkMap()
+            .hostUri("warp://localhost:9001")
+            .nodeUri(agent_URI)
+            .laneUri("histogram")
+            .didUpdate(function(key, value) {
+              addToPlot(key, value);
+            })
+            .didRemove(function(key) {
+              removeFromPlot(key);
+            })
+            .open();
+
+        // switch statement that changes the plot color according to web agent
+        var color = "#50e3c2";
+        switch(agent_URI) {
+          case "/unit/secondAgent":
+            color = "#3c52f0";
+            break;
+          case "/unit/thirdAgent":
+              color = "#212326";
+              break;
+          default:
+            // for master web agent
+            color = "#50e3c2";
+        }
+        plot
+        .stroke(color);
+        chart.addPlot(plot);
+      }
+    }
+
     </script>
   </body>
 </html>
