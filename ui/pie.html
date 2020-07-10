@@ -7,6 +7,17 @@
   <body style="display: flex; justify-content: center; align-items: center; width: 100vw; height: 100vh; margin: 0;">
     <div id="app" style="display: flex; width: 67%; height: 67%; flex-direction: column;">
     </div>
+
+    <div>
+      <label for="agents">Choose a web agent:</label>
+
+      <select name="agents" id="web_agent_select" onchange="update(this.value)">
+        <option value="/unit/master" style = "color:#50e3c2">/unit/master</option>
+        <option value="/unit/secondAgent" style = "color:#3c52f0">/unit/secondAgent</option>
+        <option value="/unit/thirdAgent" style = "color:#212326">/unit/thirdAgent</option>
+      </select>
+    </div>
+
     <script src="https://cdn.swimos.org/js/3.10.2/swim-system.js"></script>
     <script>
 
@@ -17,15 +28,18 @@ const pieCanvas = app.append('div').position('relative').append("canvas");
 const tween = swim.Transition.duration(1000);
 
 /* Pie View */
-const sliceColors = [swim.Color.parse("#00a6ed"),
-    swim.Color.parse("#6acd00"),
-    swim.Color.parse("#c200fa")];
+var color1 = "#50e3c2";
+var color2 = "#359680";
+var color3 = "#1f5c4e"
+var sliceColors = [swim.Color.parse(color3),
+    swim.Color.parse(color2),
+    swim.Color.parse(color1)];
 const pie = new swim.PieView()
     // .innerRadius("15%")
     .outerRadius("25%")
     .tickColor("#b7b7b7")
     .font("14px sans-serif")
-    .textColor("#4a4a4a");
+    .textColor("#000000");
 pieCanvas.append(pie);
 const pieIndices = {"foo": 0, "bar": 1, "baz": 2};
 
@@ -33,23 +47,28 @@ function updateSlice(key, value) {
   const v = value.get(key).numberValue();
   let slice = pie.getChildView(key);
   if (slice) {
+    sliceColor = sliceColors[pieIndices[key]];
+    slice.sliceColor(sliceColor)
     slice.value(v, tween);
     slice.label().text(v);
   } else {
-    const sliceColor = sliceColors[pieIndices[key]];
+    var sliceColor = sliceColors[pieIndices[key]];
     slice = new swim.SliceView()
         .value(v)
         .sliceColor(sliceColor)
         .label(v.toFixed())
         .legend(key);
-    pie.setChildView(key, slice);    
+    pie.setChildView(key, slice);
   }
 }
 
+// switching between web agents
+var agent_URI = "/unit/master";
+
 /* Data Subscriptions */
-const valueLink = swim.downlinkValue()
+var valueLink = swim.downlinkValue()
     .hostUri("warp://localhost:9001")
-    .nodeUri("/unit/master")
+    .nodeUri(agent_URI)
     .laneUri("latest")
     .didSet(function (value) {
       updateSlice("foo", value);
@@ -57,6 +76,51 @@ const valueLink = swim.downlinkValue()
       updateSlice("baz", value);
     })
     .open();
+
+// update logic runs whenever a new dropdown option is selected
+function update(val) {
+  if (valueLink) {
+    // close downlink on update
+    valueLink.close();
+
+    // update the node URI used in histogramLink to match the selected agent
+    agent_URI = document.getElementById('web_agent_select').value;
+    console.log(agent_URI);
+
+      // switch statement that changes the plot color according to web agent
+      switch(agent_URI) {
+        case "/unit/secondAgent":
+          color1 = "#7a85d6"
+          color2 = "#3c52f0";
+          color3 = "#182373";
+          break;
+        case "/unit/thirdAgent":
+          color1 = "#d5d9e0";
+          color2 = "#9da4b0"
+          color3 = "#6d7178";
+          break;
+        default:
+          // for master web agent
+          color1 = "#50e3c2";
+          color2 = "#359680";
+          color3 = "#1f5c4e"
+      }
+      sliceColors = [swim.Color.parse(color3),
+          swim.Color.parse(color2),
+          swim.Color.parse(color1)];
+
+          valueLink = swim.downlinkValue()
+              .hostUri("warp://localhost:9001")
+              .nodeUri(agent_URI)
+              .laneUri("latest")
+              .didSet(function (value) {
+                updateSlice("foo", value);
+                updateSlice("bar", value);
+                updateSlice("baz", value);
+              })
+              .open();
+    }
+  }
 
     </script>
   </body>
