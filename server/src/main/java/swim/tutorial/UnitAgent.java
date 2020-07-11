@@ -101,7 +101,9 @@ public class UnitAgent extends AbstractAgent {
 	        dropOldData();
 	      })
 	      .didRemove((k,o) -> {
-	    	  // TODO: stats.put(stats.get()-o)
+	    	  // TODO: Finish here by adding remove logic
+	    	  // stats.put(stats.get()-o)
+	    	  
 	    	  logMessage("histogram: removed <" + k + "," + Recon.toString(o) + ">");
 	    	  count_sum = 0;
 	    	  count_total = 0;
