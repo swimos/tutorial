@@ -33,22 +33,26 @@ const gauge = new swim.GaugeView()
     .sweepAngle(swim.Angle.rad(3 * Math.PI / 2))
     .dialColor("#cccccc")
     .meterColor("#989898")
-    .title(new swim.TextRunView("Foo, Bar, Baz").font("20px sans-serif"))
-    .font("14px sans-serif")
+    .title(new swim.TextRunView("Mean, Local Mean, Local Variance, Local Standard Deviation").font("10px sans-serif"))
+    .font("10px sans-serif")
     .textColor("#4a4a4a");
 gaugeCanvas.append(gauge);
 
-const fooDial = new swim.DialView()
-    .label("FOO");
-gauge.setChildView("foo", fooDial);
+const avgDial = new swim.DialView()
+    .label("AVG");
+gauge.setChildView("avg", avgDial);
 
-const barDial = new swim.DialView()
-    .label("BAR");
-gauge.setChildView("bar", barDial);
+const locAvgDial = new swim.DialView()
+    .label("LOC_AVG");
+gauge.setChildView("loc_avg", locAvgDial);
 
-const bazDial = new swim.DialView()
-    .label("BAZ");
-gauge.setChildView("baz", bazDial);
+const locVarDial = new swim.DialView()
+    .label("LOC_VAR");
+gauge.setChildView("loc_var", locVarDial);
+
+const locStdDevDial = new swim.DialView()
+    .label("LOC_STD_DEV");
+gauge.setChildView("loc_std_dev", locStdDevDial);
 
 var colorLow = "#50e3c2";
 var colorMed = "#359680";
@@ -74,11 +78,12 @@ var agent_URI = "/unit/master";
 var valueLink = swim.downlinkValue()
     .hostUri("warp://localhost:9001")
     .nodeUri(agent_URI)
-    .laneUri("latest")
+    .laneUri("stats")
     .didSet(function (value) {
-      updateDial(fooDial, 70, "foo", value);
-      updateDial(barDial, 140, "bar", value);
-      updateDial(bazDial, 210, "baz", value);
+      updateDial(avgDial, 60, "avg", value);
+      updateDial(locAvgDial, 60, "local_avg", value);
+      updateDial(locVarDial, 1000, "local_variance", value);
+      updateDial(locStdDevDial, 40, "local_std_dev", value)
     })
     .open();
 
@@ -96,11 +101,12 @@ function update(val) {
     valueLink = swim.downlinkValue()
         .hostUri("warp://localhost:9001")
         .nodeUri(agent_URI)
-        .laneUri("latest")
+        .laneUri("stats")
         .didSet(function (value) {
-          updateDial(fooDial, 70, "foo", value);
-          updateDial(barDial, 140, "bar", value);
-          updateDial(bazDial, 210, "baz", value);
+          updateDial(avgDial, 60, "avg", value);
+          updateDial(locAvgDial, 60, "local_avg", value);
+          updateDial(locVarDial, 1000, "local_variance", value);
+          updateDial(locStdDevDial, 40, "local_std_dev", value)
         })
         .open();
 
