@@ -16,35 +16,35 @@ public class UnitAgent extends AbstractAgent {
 	  // *********************** EXAMPLE SOLUTIONS FOR STATS LANE ***********************
 	  
 	  // instance variables to track metrics going into stats
-	  private long count_sum = 0;
-	  private int count_total = 0;
+	  private long countSum = 0;
+	  private int countTotal = 0;
 	  private int index = 0;
-	  private long[] recent_data = new long[5];
+	  private long[] recentData = new long[5];
 	  
 	  
 	  // intermediary lanes that represent individual metrics
-	  @SwimLane("stats_1")
-	  private final ValueLane<Long> stats_1 = this.<Long>valueLane()
+	  @SwimLane("avg")
+	  private final ValueLane<Long> avg = this.<Long>valueLane()
 	  .didSet((n, o) -> {
-	    logMessage("stats_1: mean updated to " + n + " from " + o);
+	    logMessage("avg: mean updated to " + n + " from " + o);
 	  });
 	  
-	  @SwimLane("stats_2")
-	  private final ValueLane<Long> stats_2 = this.<Long>valueLane()
+	  @SwimLane("localAvg")
+	  private final ValueLane<Long> localAvg = this.<Long>valueLane()
 	  .didSet((n, o) -> {
-	    logMessage("stats_2: local median (last 5 entries) updated to " + n + " from " + o);
+	    logMessage("localAvg: local average (last 5 entries) updated to " + n + " from " + o);
 	  });
 	  
-	  @SwimLane("stats_3")
-	  private final ValueLane<Long> stats_3 = this.<Long>valueLane()
+	  @SwimLane("localVar")
+	  private final ValueLane<Long> localVar = this.<Long>valueLane()
 	  .didSet((n, o) -> {
-	    logMessage("stats_3: local variance (last 5 entries) updated to " + n + " from " + o);
+	    logMessage("localVar: local variance (last 5 entries) updated to " + n + " from " + o);
 	  });
 	  
-	  @SwimLane("stats_4")
-	  private final ValueLane<Long> stats_4 = this.<Long>valueLane()
+	  @SwimLane("localStdDev")
+	  private final ValueLane<Long> localStdDev = this.<Long>valueLane()
 	  .didSet((n, o) -> {
-	    logMessage("stats_4: local std deviation (last 5 entries) updated to " + n + " from " + o);
+	    logMessage("localStdDev: local std deviation (last 5 entries) updated to " + n + " from " + o);
 	  });
 	  
 	  
@@ -62,41 +62,38 @@ public class UnitAgent extends AbstractAgent {
 	      .didUpdate((k, n, o) -> {
 	        logMessage("histogram: replaced " + k + "'s value to " + Recon.toString(n) + " from " + Recon.toString(o));
 	        
-	        // calculating overall mean to send to stats1
-	        count_sum += n.getItem(0).longValue();
-	        count_total ++;
-	        final long avg = count_sum / count_total;
-	        stats_1.set(avg);
+	        // calculating overall mean to send to average lane
+	        countSum += n.getItem(0).longValue();
+	        countTotal ++;
+	        final long AVG = countSum / countTotal;
+	        avg.set(AVG);
 	        
-	        // appending new data to the recent_data array
-	        if (index >= recent_data.length-1) {
+	        // appending new data to the recentData array
+	        if (index >= recentData.length-1) {
 	        	index = 0;
 	        }
-	        recent_data[index] = n.getItem(0).longValue();
+	        recentData[index] = n.getItem(0).longValue();
 	        index ++;
 	        
-	        // calculating local mean to send to stats2
-	        long local_sum = 0;
-	        for (long d : recent_data) local_sum += d;
-	        final long local_avg = local_sum / (long) recent_data.length;
-	        stats_2.set(local_avg);
+	        // calculating local mean to send to local average lane
+	        long localSum = 0;
+	        for (long d : recentData) localSum += d;
+	        final long LOCAL_AVG = localSum / (long) recentData.length;
+	        localAvg.set(LOCAL_AVG);
 	        
 	        // calculating local variance to send to stats3
-	        long squared_dif_sum = 0; // (sum of local mean - each value)^2
-	        for (long d : recent_data) squared_dif_sum += (d - local_avg)*(d - local_avg);
-	        long local_variance = squared_dif_sum/recent_data.length;
-	        stats_3.set(local_variance);
+	        long squaredDifSum = 0; // (sum of local mean - each value)^2
+	        for (long d : recentData) squaredDifSum += (d - LOCAL_AVG)*(d - LOCAL_AVG);
+	        final long LOCAL_VAR = squaredDifSum/recentData.length;
+	        localVar.set(LOCAL_VAR);
 	        
-	        // calculating local standard deviation to send to stats4
-	        long local_std_dev = (long)Math.sqrt(local_variance);
-	        stats_4.set(local_std_dev);
+	        // calculating local standard deviation to send to local standard deviation lane
+	        final long LOCAL_STD_DEV = (long)Math.sqrt(LOCAL_VAR);
+	        localStdDev.set(LOCAL_STD_DEV);
 	        
 	        // Consolidating all data to the valuelane stats of type value
-	        
-	        Value all_stats = Record.create(4).slot("avg", avg).slot("local_avg", local_avg).slot("local_variance", local_variance).slot("local_std_dev", local_std_dev);
-	        // build new Record.create(4).slot("") etc
+	        Value all_stats = Record.create(4).slot("AVG", AVG).slot("LOCAL_AVG", LOCAL_AVG).slot("LOCAL_VAR", LOCAL_VAR).slot("LOCAL_STD_DEV", LOCAL_STD_DEV);
 	        stats.set(all_stats); 
-	        // TODO: ask how to combine the Longs from each stats_# above into one Value in stats
 	        
 	        dropOldData();
 	      })
@@ -105,8 +102,8 @@ public class UnitAgent extends AbstractAgent {
 	    	  // stats.put(stats.get()-o)
 	    	  
 	    	  logMessage("histogram: removed <" + k + "," + Recon.toString(o) + ">");
-	    	  count_sum = 0;
-	    	  count_total = 0;
+	    	  countSum = 0;
+	    	  countTotal = 0;
 	    	  index = 0;
 	      });
 	  

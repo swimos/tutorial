@@ -114,6 +114,7 @@ function update(val) {
               .nodeUri(agent_URI)
               .laneUri("latest")
               .didSet(function (value) {
+                // TODO: change to stats
                 updateSlice("foo", value);
                 updateSlice("bar", value);
                 updateSlice("baz", value);
