@@ -39,20 +39,20 @@ const gauge = new swim.GaugeView()
 gaugeCanvas.append(gauge);
 
 const avgDial = new swim.DialView()
-    .label("AVG");
-gauge.setChildView("AVG", avgDial);
+    .label("avg");
+gauge.setChildView("avg", avgDial);
 
 const locAvgDial = new swim.DialView()
-    .label("LOC_AVG");
-gauge.setChildView("LOC_AVG", locAvgDial);
+    .label("localAvg");
+gauge.setChildView("localAvg", locAvgDial);
 
 const locVarDial = new swim.DialView()
-    .label("LOC_VAR");
-gauge.setChildView("LOC_VAR", locVarDial);
+    .label("localVar");
+gauge.setChildView("localVar", locVarDial);
 
 const locStdDevDial = new swim.DialView()
-    .label("LOC_STD_DEV");
-gauge.setChildView("LOC_STD_DEV", locStdDevDial);
+    .label("localStdDev");
+gauge.setChildView("localStdDev", locStdDevDial);
 
 var colorLow = "#50e3c2";
 var colorMed = "#359680";
@@ -80,10 +80,10 @@ var valueLink = swim.downlinkValue()
     .nodeUri(agent_URI)
     .laneUri("stats")
     .didSet(function (value) {
-      updateDial(avgDial, 60, "AVG", value);
-      updateDial(locAvgDial, 60, "LOCAL_AVG", value);
-      updateDial(locVarDial, 1000, "LOCAL_VAR", value);
-      updateDial(locStdDevDial, 40, "LOCAL_STD_DEV", value)
+      updateDial(avgDial, 60, "avg", value);
+      updateDial(locAvgDial, 60, "localAvg", value);
+      updateDial(locVarDial, 1000, "localVar", value);
+      updateDial(locStdDevDial, 40, "localStdDev", value)
     })
     .open();
 
@@ -103,10 +103,10 @@ function update(val) {
         .nodeUri(agent_URI)
         .laneUri("stats")
         .didSet(function (value) {
-          updateDial(avgDial, 60, "AVG", value);
-          updateDial(locAvgDial, 60, "LOCAL_AVG", value);
-          updateDial(locVarDial, 1000, "LOCAL_VAR", value);
-          updateDial(locStdDevDial, 40, "LOCAL_STD_DEV", value)
+          updateDial(avgDial, 60, "avg", value);
+          updateDial(locAvgDial, 60, "localAvg", value);
+          updateDial(locVarDial, 1000, "localVar", value);
+          updateDial(locStdDevDial, 40, "localStdDev", value)
         })
         .open();
 
