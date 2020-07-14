@@ -13,11 +13,21 @@ import java.util.Iterator;
 
 public class UnitAgent extends AbstractAgent {
 		
-  // TODO: complete the stats Value Lane
-  // @SwimLane("stats")
+  // TODO: implement new Value Lane(s) for stats
 	
+  // HINT: start by declaring @SwimLane("name")
   // HINT: Use the valueLane() method to instantiate the lane
   // HINT: Use the .didSet() lifecycle callback to log a message showing updates to stats
+	
+	
+  // consider creating more value lanes for stats with single values such as 
+  // @SwimLane("avg")
+  // private final ValueLane<Long> avg = this.<Long>valueLane()
+	
+	
+  // you may also prefer one value lane with more than one statistic stored as a Value
+  //  @SwimLane("stats")
+  //  private final ValueLane<Value> stats = this.<Value>valueLane() 	    
 	
    @SwimLane("histogram")
    private final MapLane<Long, Value> histogram = this.<Long, Value>mapLane()
@@ -27,12 +37,19 @@ public class UnitAgent extends AbstractAgent {
          // TODO: update stats with update logic
          
          // HINT: access new data sent to histogram with 
-         		// n.getItem(0).longValue()
+         		
+           // RECOMMENDED, to get a value by specifying its key:
+           // n.get("count").longValue() 
+         
+           // ALTERNATIVELY, to get the first Item slot (equivalent result here as ^):
+           // n.getItem(0).longValue() 
+         
          
          // HINT: use this data to calculate stats such as mean, variance, std dev, etc
          
+         
          // HINT: send new data to stats lane by calling 
-         		// stats.set($TRANSFORMED_DATA)
+           // stats.set($TRANSFORMED_DATA)
          
 		 dropOldData();
 
