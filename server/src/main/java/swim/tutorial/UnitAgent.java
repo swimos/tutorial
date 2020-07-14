@@ -115,7 +115,7 @@ public class UnitAgent extends AbstractAgent {
 	    	  	  
 	    	  // remove logic for stats
 	    	  Value updated_stats = Record.create(4).slot("avg", setUpdatedAvg).slot("localAvg", setLocalAvg).slot("localVar", setLocalVar).slot("localStdDev", setLocalStdDev);
-		      stats.set(updated_stats); 
+		      stats.set(updatedStats); 
 	    	  
 	      });
 	  
