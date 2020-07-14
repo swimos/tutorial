@@ -81,7 +81,7 @@ public class UnitAgent extends AbstractAgent {
 	        final long LOCAL_AVG = localSum / (long) recentData.length;
 	        localAvg.set(LOCAL_AVG);
 	        
-	        // calculating local variance to send to stats3
+	        // calculating local variance to send to local var lane
 	        long squaredDifSum = 0; // (sum of local mean - each value)^2
 	        for (long d : recentData) squaredDifSum += (d - LOCAL_AVG)*(d - LOCAL_AVG);
 	        final long LOCAL_VAR = squaredDifSum/recentData.length;
@@ -98,13 +98,41 @@ public class UnitAgent extends AbstractAgent {
 	        dropOldData();
 	      })
 	      .didRemove((k,o) -> {
-	    	  // TODO: Finish here by adding remove logic
 	    	  // stats.put(stats.get()-o)
 	    	  
 	    	  logMessage("histogram: removed <" + k + "," + Recon.toString(o) + ">");
-	    	  countSum = 0;
-	    	  countTotal = 0;
-	    	  index = 0;
+	    	  
+	    	  // remove logic for avg lane
+	    	  countSum -= o.getItem(0).longValue();
+	    	  countTotal --;
+	    	  avg.put(countSum / countTotal)
+	    	  
+	    	  // remove logic for local avg lane
+	    	  localSum -= o.getItem(0).longValue()
+	    	  newLocAvg = localSum/(long) (recentData.length-1);
+	    	  localAvg.put(newLocAvg)
+	    	  
+	    	  // remove logic for local var lane
+	    	  
+	    	  long squaredDifSum = 0; // (sum of local mean - each value)^2
+		        for (long d : recentData) squaredDifSum += (d - LOCAL_AVG)*(d - LOCAL_AVG);
+		        final long LOCAL_VAR = squaredDifSum/recentData.length;
+		        localVar.set(LOCAL_VAR);
+
+		      for (long d : recentData) {
+		    	  if (d.equals())
+		      }
+	    	  
+		      final long LOCAL_AVG = localSum / (long) recentData.length;
+		      localAvg.set(LOCAL_AVG);
+	    	  
+	    	  squaredDifSum-()*()/
+	    	  recentData.length-1
+	    	  
+	    	  // remove logic for avg lane
+	    	  	  
+	    	  // remove logic for stats
+	    	  
 	      });
 	  
 	  	// ****************************************************************************
