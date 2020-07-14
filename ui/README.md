@@ -7,7 +7,7 @@ The minimum you need to visualize Swim data is a Swim client. That said, Swim co
 #### *Try it yourself:*
 
 - [ ] *Based on changes suggested in* [*the server README*](https://github.com/swimos/tutorial/blob/tutorial_solutions/server/README.md) *, update the UI code to accommodate your new server-side*
-- [ ] *See the [**tutorial_solutions**](https://github.com/swimos/tutorial/tree/tutorial_solutions) branch for an example of this*
+- [ ] *See the [**solutions**](https://github.com/swimos/tutorial/tree/solutions) branch for an example of this*
 
 Read [chart.html](http://github.com/swimos/tutorial/tree/master/ui/chart.html) to build your own line chart.
 
