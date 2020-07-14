@@ -64,8 +64,8 @@ public class UnitAgent extends AbstractAgent {
 	        // calculating overall mean to send to average lane
 	        countSum += n.getItem(0).longValue();
 	        countTotal ++;
-	        final long AVG = countSum / countTotal;
-	        avg.set(AVG);
+	        final long setAvg = countSum / countTotal;
+	        avg.set(setAvg);
 	        
 	        // appending new data to the recentData array
 	        if (index >= recentData.length-1) {
@@ -77,21 +77,21 @@ public class UnitAgent extends AbstractAgent {
 	        // calculating local mean to send to local average lane
 	        long localSum = 0;
 	        for (long d : recentData) localSum += d;
-	        final long LOCAL_AVG = localSum / (long) recentData.length;
-	        localAvg.set(LOCAL_AVG);
+	        final long setLocalAvg = localSum / (long) recentData.length;
+	        localAvg.set(setLocalAvg);
 	        
 	        // calculating local variance to send to local var lane
 	        long squaredDifSum = 0; // (sum of local mean - each value)^2
-	        for (long d : recentData) squaredDifSum += (d - LOCAL_AVG)*(d - LOCAL_AVG);
-	        final long LOCAL_VAR = squaredDifSum/recentData.length;
-	        localVar.set(LOCAL_VAR);
+	        for (long d : recentData) squaredDifSum += (d - setLocalAvg)*(d - setLocalAvg);
+	        final long setLocalVar = squaredDifSum/recentData.length;
+	        localVar.set(setLocalVar);
 	        
 	        // calculating local standard deviation to send to local standard deviation lane
-	        final long LOCAL_STD_DEV = (long)Math.sqrt(LOCAL_VAR);
-	        localStdDev.set(LOCAL_STD_DEV);
+	        final long setLocalStdDev = (long)Math.sqrt(setLocalVar);
+	        localStdDev.set(setLocalStdDev);
 	        
 	        // Consolidating all data to the valuelane stats of type value
-	        Value all_stats = Record.create(4).slot("AVG", AVG).slot("LOCAL_AVG", LOCAL_AVG).slot("LOCAL_VAR", LOCAL_VAR).slot("LOCAL_STD_DEV", LOCAL_STD_DEV);
+	        Value all_stats = Record.create(4).slot("avg", setAvg).slot("localAvg", setLocalAvg).slot("localVar", setLocalVar).slot("localStdDev", setLocalStdDev);
 	        stats.set(all_stats); 
 	        
 	        dropOldData();
@@ -105,16 +105,16 @@ public class UnitAgent extends AbstractAgent {
 	    	  // remove logic for avg lane
 	    	  countSum -= o.getItem(0).longValue();
 	    	  countTotal --;
-	    	  final long UPDATED_AVG = countSum / countTotal;
-	    	  avg.set(UPDATED_AVG);
+	    	  final long setUpdatedAvg = countSum / countTotal;
+	    	  avg.set(setUpdatedAvg);
 	    	  
 	    	  // stats based only on the most recent inputs (i.e. localAvg, et al) will constantly update already
-	    	  final long LOCAL_AVG = localAvg.get();
-	    	  final long LOCAL_VAR = localVar.get();
-	    	  final long LOCAL_STD_DEV = localStdDev.get();
+	    	  final long setLocalAvg = localAvg.get();
+	    	  final long setLocalVar = localVar.get();
+	    	  final long setLocalStdDev = localStdDev.get();
 	    	  	  
 	    	  // remove logic for stats
-	    	  Value updated_stats = Record.create(4).slot("AVG", UPDATED_AVG).slot("LOCAL_AVG", LOCAL_AVG).slot("LOCAL_VAR", LOCAL_VAR).slot("LOCAL_STD_DEV", LOCAL_STD_DEV);
+	    	  Value updated_stats = Record.create(4).slot("avg", setUpdatedAvg).slot("localAvg", setLocalAvg).slot("localVar", setLocalVar).slot("localStdDev", setLocalStdDev);
 		      stats.set(updated_stats); 
 	    	  
 	      });
