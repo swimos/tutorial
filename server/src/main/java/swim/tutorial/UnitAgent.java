@@ -98,6 +98,7 @@ public class UnitAgent extends AbstractAgent {
 	        dropOldData();
 	      })
 	      .didRemove((k,o) -> {
+	    	  // remove logic typically follows this format:
 	    	  // stats.put(stats.get()-o)
 	    	  
 	    	  logMessage("histogram: removed <" + k + "," + Recon.toString(o) + ">");
@@ -105,33 +106,14 @@ public class UnitAgent extends AbstractAgent {
 	    	  // remove logic for avg lane
 	    	  countSum -= o.getItem(0).longValue();
 	    	  countTotal --;
-	    	  avg.put(countSum / countTotal)
+	    	  AVG = countSum / countTotal;
+	    	  avg.set(AVG)
 	    	  
-	    	  // remove logic for local avg lane
-	    	  localSum -= o.getItem(0).longValue()
-	    	  newLocAvg = localSum/(long) (recentData.length-1);
-	    	  localAvg.put(newLocAvg)
-	    	  
-	    	  // remove logic for local var lane
-	    	  
-	    	  long squaredDifSum = 0; // (sum of local mean - each value)^2
-		        for (long d : recentData) squaredDifSum += (d - LOCAL_AVG)*(d - LOCAL_AVG);
-		        final long LOCAL_VAR = squaredDifSum/recentData.length;
-		        localVar.set(LOCAL_VAR);
-
-		      for (long d : recentData) {
-		    	  if (d.equals())
-		      }
-	    	  
-		      final long LOCAL_AVG = localSum / (long) recentData.length;
-		      localAvg.set(LOCAL_AVG);
-	    	  
-	    	  squaredDifSum-()*()/
-	    	  recentData.length-1
-	    	  
-	    	  // remove logic for avg lane
+	    	  // stats based only on the most recent inputs (i.e. localAvg, et al) will constantly update already
 	    	  	  
 	    	  // remove logic for stats
+	    	  all_stats = Record.create(4).slot("AVG", AVG).slot("LOCAL_AVG", LOCAL_AVG).slot("LOCAL_VAR", LOCAL_VAR).slot("LOCAL_STD_DEV", LOCAL_STD_DEV);
+		      stats.set(all_stats); 
 	    	  
 	      });
 	  
