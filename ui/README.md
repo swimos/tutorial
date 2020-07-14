@@ -4,10 +4,11 @@
 
 The minimum you need to visualize Swim data is a Swim client. That said, Swim comes with additional tools that let you see your data right away with no extra work.
 
-#### *Try it yourself:*
+#### *Example Solutions*
 
-- [ ] *Based on changes suggested in* [*the server README*](https://github.com/swimos/tutorial/blob/tutorial_solutions/server/README.md) *, update the UI code to accommodate your new server-side*
-- [ ] *See the [**tutorial_solutions**](https://github.com/swimos/tutorial/tree/tutorial_solutions) branch for an example of this*
+- [ ] *Use the dropdown menu to toggle between three different web agents for each UI demo*
+- [ ] *See how each UI demo updates its downlinks when new web agents are selected*
+- [ ] *Explore how to include simple visual changes (e.g. color changes for different agents) using the* [*swim UI framework*](https://docs.swimos.org/js/latest/index.html)
 
 Read [chart.html](http://github.com/swimos/tutorial/tree/master/ui/chart.html) to build your own line chart.
 

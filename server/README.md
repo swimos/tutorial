@@ -10,10 +10,9 @@ Swim implements a general purpose distributed object model. The "objects" in thi
 
 [Creating a class](http://github.com/swimos/tutorial/tree/master/server/src/main/java/swim/tutorial/UnitAgent.java#L13) that extends `swim.api.agent.AbstractAgent` defines a *template* for Web Agents (though not a useful one until we add some [lanes](#lanes)).
 
-#### *Try it yourself:* 
-- [ ] *Navigate to [swim.tutorial.DataSource.java](https://github.com/swimos/tutorial/blob/master/server/src/main/java/swim/tutorial/DataSource.java)*
-- [ ] *Create additional web agents using the instructions in the code*
-- [ ] *Compare your answer with those in the [**tutorial_solutions**](https://github.com/swimos/tutorial/tree/tutorial_solutions) branch*
+#### *Example Solutions*
+- *Created two additional web agents in (DataSource)[https://github.com/swimos/tutorial/blob/solutions/server/src/main/java/swim/tutorial/DataSource.java]*
+- *Created unique Records (msg2 and msg3) to vary the data sent to different agents*
 
 Visit the [documentation](https://developer.swim.ai/concepts/agents/) for further details about Web Agents.
 
@@ -25,11 +24,11 @@ Continuing our analogy, *lane callback* functions serve as the "methods" of Web 
 
 Each lane type defines a set of overridable (default no-op) lifecycle callbacks. For example, [sending a command message](#sending-data-do-swim) to any command lane will trigger its [`onCommand` callback](http://github.com/swimos/tutorial/tree/master/server/src/main/java/swim/tutorial/UnitAgent.java#L51-L54). On the other hand, [setting a value lane](http://github.com/swimos/tutorial/tree/master/server/src/main/java/swim/tutorial/UnitAgent.java#L53) will trigger its `willSet` callback, then update its value, then trigger its [`didSet` callback](http://github.com/swimos/tutorial/tree/master/server/src/main/java/swim/tutorial/UnitAgent.java#L40-L47).
 
-#### *Try it yourself:* 
-- [ ] *Navigate to [swim.tutorial.UnitAgent.java](https://github.com/swimos/tutorial/blob/master/server/src/main/java/swim/tutorial/UnitAgent.java)*
-- [ ] *Fill in the remaining code to create a new value lane called `stats` which gets populated by changes to the `histogram` map lane*
-- [ ] *Experiment with ways to transform the data entries in histogram. Ideas: mean, median, range, standard deviation, variance, etc!*
-- [ ] *Compare your answer with those in the [**tutorial_solutions**](https://github.com/swimos/tutorial/tree/tutorial_solutions) branch*
+#### *Example Solutions*
+- *Added 5 new SwimLanes in (UnitAgent)[https://github.com/swimos/tutorial/blob/solutions/server/src/main/java/swim/tutorial/UnitAgent.java]*
+	- *the 'avg' ValueLane keeps track of changes to the mean cumulatively*
+	- *the 'localAvg', 'localVar', and 'localStdDev' ValueLanes run calculations on the 5 most recent data points sent from histogram*
+	- *the 'stats' ValueLane is an alternative design choice which tracks each of the above metrics using one lane of type Value (rather than 4 individual lanes of type Long)*
 
 Visit the [documentation](https://developer.swim.ai/concepts/lanes/) for further details about lanes.
 
@@ -57,7 +56,4 @@ Visit the [documentation](https://developer.swim.ai/concepts/links/) for further
 
 ## *Visualizing Your Changes in the UI*
 
-- [ ] *Consider how the above changes to the server code may change the way you'd want to visualize your data*
-- [ ] *Navigate to the [ui folder](https://github.com/swimos/tutorial/tree/master/ui)*
-- [ ] *Experiment with the UI code to accommodate for your server-side changes*
-- [ ] *See the [**tutorial_solutions**](https://github.com/swimos/tutorial/tree/tutorial_solutions) branch for an example of this*
+- *See the [**solutions**](https://github.com/swimos/tutorial/tree/solutions/ui) branch for an example of changes you could make to the UI to reflect these possible solutions*
