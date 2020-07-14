@@ -48,8 +48,7 @@ public class UnitAgent extends AbstractAgent {
 	  });
 	  
 	  
-	  // TODO: combine all calculations into one swimlane of type Value
-	  
+	  // combination all calculations into one swim lane of type Value
 	  @SwimLane("stats")
 	  private final ValueLane<Value> stats = this.<Value>valueLane()
 	  .didSet((n, o) -> {
@@ -106,14 +105,17 @@ public class UnitAgent extends AbstractAgent {
 	    	  // remove logic for avg lane
 	    	  countSum -= o.getItem(0).longValue();
 	    	  countTotal --;
-	    	  AVG = countSum / countTotal;
-	    	  avg.set(AVG)
+	    	  final long UPDATED_AVG = countSum / countTotal;
+	    	  avg.set(UPDATED_AVG);
 	    	  
 	    	  // stats based only on the most recent inputs (i.e. localAvg, et al) will constantly update already
+	    	  final long LOCAL_AVG = localAvg.get();
+	    	  final long LOCAL_VAR = localVar.get();
+	    	  final long LOCAL_STD_DEV = localStdDev.get();
 	    	  	  
 	    	  // remove logic for stats
-	    	  all_stats = Record.create(4).slot("AVG", AVG).slot("LOCAL_AVG", LOCAL_AVG).slot("LOCAL_VAR", LOCAL_VAR).slot("LOCAL_STD_DEV", LOCAL_STD_DEV);
-		      stats.set(all_stats); 
+	    	  Value updated_stats = Record.create(4).slot("AVG", UPDATED_AVG).slot("LOCAL_AVG", LOCAL_AVG).slot("LOCAL_VAR", LOCAL_VAR).slot("LOCAL_STD_DEV", LOCAL_STD_DEV);
+		      stats.set(updated_stats); 
 	    	  
 	      });
 	  
