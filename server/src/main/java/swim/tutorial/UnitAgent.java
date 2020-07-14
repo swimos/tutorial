@@ -62,7 +62,7 @@ public class UnitAgent extends AbstractAgent {
 	        logMessage("histogram: replaced " + k + "'s value to " + Recon.toString(n) + " from " + Recon.toString(o));
 	        
 	        // calculating overall mean to send to average lane
-	        countSum += n.getItem(0).longValue();
+	        countSum += n.get("count").longValue();
 	        countTotal ++;
 	        final long setAvg = countSum / countTotal;
 	        avg.set(setAvg);
@@ -71,7 +71,7 @@ public class UnitAgent extends AbstractAgent {
 	        if (index >= recentData.length-1) {
 	        	index = 0;
 	        }
-	        recentData[index] = n.getItem(0).longValue();
+	        recentData[index] = n.get("count").longValue();
 	        index ++;
 	        
 	        // calculating local mean to send to local average lane
@@ -103,7 +103,7 @@ public class UnitAgent extends AbstractAgent {
 	    	  logMessage("histogram: removed <" + k + "," + Recon.toString(o) + ">");
 	    	  
 	    	  // remove logic for avg lane
-	    	  countSum -= o.getItem(0).longValue();
+	    	  countSum -= o.get("count").longValue() ;
 	    	  countTotal --;
 	    	  final long setUpdatedAvg = countSum / countTotal;
 	    	  avg.set(setUpdatedAvg);
