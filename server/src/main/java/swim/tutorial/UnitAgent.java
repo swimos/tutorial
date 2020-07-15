@@ -12,14 +12,115 @@ import swim.structure.Value;
 import java.util.Iterator;
 
 public class UnitAgent extends AbstractAgent {
-
-  @SwimLane("histogram")
-  private final MapLane<Long, Value> histogram = this.<Long, Value>mapLane()
-      .didUpdate((k, n, o) -> {
-        logMessage("histogram: replaced " + k + "'s value to " + Recon.toString(n) + " from " + Recon.toString(o));
-        dropOldData();
-      });
-
+	
+	  // *********************** EXAMPLE SOLUTIONS FOR STATS LANE ***********************
+	  
+	  // instance variables to track metrics going into stats
+	  private long countSum = 0;
+	  private int countTotal = 0;
+	  private int index = 0;
+	  private long[] recentData = new long[5];
+	  
+	  
+	  // intermediary lanes that represent individual metrics
+	  @SwimLane("avg")
+	  private final ValueLane<Long> avg = this.<Long>valueLane()
+	  .didSet((n, o) -> {
+	    logMessage("avg: mean updated to " + n + " from " + o);
+	  });
+	  
+	  @SwimLane("localAvg")
+	  private final ValueLane<Long> localAvg = this.<Long>valueLane()
+	  .didSet((n, o) -> {
+	    logMessage("localAvg: local average (last 5 entries) updated to " + n + " from " + o);
+	  });
+	  
+	  @SwimLane("localVar")
+	  private final ValueLane<Long> localVar = this.<Long>valueLane()
+	  .didSet((n, o) -> {
+	    logMessage("localVar: local variance (last 5 entries) updated to " + n + " from " + o);
+	  });
+	  
+	  @SwimLane("localStdDev")
+	  private final ValueLane<Long> localStdDev = this.<Long>valueLane()
+	  .didSet((n, o) -> {
+	    logMessage("localStdDev: local std deviation (last 5 entries) updated to " + n + " from " + o);
+	  });
+	  
+	  
+	  // combination all calculations into one swim lane of type Value
+	  @SwimLane("stats")
+	  private final ValueLane<Value> stats = this.<Value>valueLane()
+	  .didSet((n, o) -> {
+		  logMessage("stats: set to " + Recon.toString(n) + " from " + Recon.toString(o));
+	  });
+	
+	  // *********************** EXAMPLE SOLUTION FOR HISTOGRAM ***********************
+	  @SwimLane("histogram")
+	  private final MapLane<Long, Value> histogram = this.<Long, Value>mapLane()
+	      .didUpdate((k, n, o) -> {
+	        logMessage("histogram: replaced " + k + "'s value to " + Recon.toString(n) + " from " + Recon.toString(o));
+	        
+	        // calculating overall mean to send to average lane
+	        countSum += n.get("count").longValue();
+	        countTotal++;
+	        final long setAvg = countSum / countTotal;
+	        avg.set(setAvg);
+	        
+	        // appending new data to the recentData array
+	        if (index >= recentData.length-1) {
+	        	index = 0;
+	        }
+	        recentData[index] = n.get("count").longValue();
+	        index++;
+	        
+	        // calculating local mean to send to local average lane
+	        long localSum = 0;
+	        for (long d : recentData) localSum += d;
+	        final long setLocalAvg = localSum / (long) recentData.length;
+	        localAvg.set(setLocalAvg);
+	        
+	        // calculating local variance to send to local var lane
+	        long squaredDifSum = 0; // (sum of local mean - each value)^2
+	        for (long d : recentData) squaredDifSum += (d - setLocalAvg)*(d - setLocalAvg);
+	        final long setLocalVar = squaredDifSum/recentData.length;
+	        localVar.set(setLocalVar);
+	        
+	        // calculating local standard deviation to send to local standard deviation lane
+	        final long setLocalStdDev = (long)Math.sqrt(setLocalVar);
+	        localStdDev.set(setLocalStdDev);
+	        
+	        // Consolidating all data to the valuelane stats of type value
+	        Value all_stats = Record.create(4).slot("avg", setAvg).slot("localAvg", setLocalAvg).slot("localVar", setLocalVar).slot("localStdDev", setLocalStdDev);
+	        stats.set(all_stats); 
+	        
+	        dropOldData();
+	      })
+	      .didRemove((k,o) -> {
+	    	  // remove logic typically follows this format:
+	    	  // stats.put(stats.get()-o)
+	    	  
+	    	  logMessage("histogram: removed <" + k + "," + Recon.toString(o) + ">");
+	    	  
+	    	  // remove logic for avg lane
+	    	  countSum -= o.get("count").longValue() ;
+	    	  countTotal--;
+	    	  final long setUpdatedAvg = countSum / countTotal;
+	    	  avg.set(setUpdatedAvg);
+	    	  
+	    	  // stats based only on the most recent inputs (i.e. localAvg, et al) will constantly update already
+	    	  final long setLocalAvg = localAvg.get();
+	    	  final long setLocalVar = localVar.get();
+	    	  final long setLocalStdDev = localStdDev.get();
+	    	  	  
+	    	  // remove logic for stats
+	    	  Value updated_stats = Record.create(4).slot("avg", setUpdatedAvg).slot("localAvg", setLocalAvg).slot("localVar", setLocalVar).slot("localStdDev", setLocalStdDev);
+		      stats.set(updatedStats); 
+	    	  
+	      });
+	  
+	  	// ****************************************************************************
+		  
   @SwimLane("history")
   private final ListLane<Value> history = this.<Value>listLane()
       .didUpdate((idx, newValue, oldValue) -> {

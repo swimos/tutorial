@@ -7,6 +7,17 @@
   <body style="display: flex; justify-content: center; align-items: center; width: 100vw; height: 100vh; margin: 0;">
     <div id="app" style="display: flex; width: 67%; height: 67%; flex-direction: column;">
     </div>
+
+    <div>
+      <label for="agents">Choose a web agent:</label>
+
+      <select name="agents" id="web_agent_select" onchange="update(this.value)">
+        <option value="/unit/master" style = "color:#50e3c2">/unit/master</option>
+        <option value="/unit/secondAgent" style = "color:#3c52f0">/unit/secondAgent</option>
+        <option value="/unit/thirdAgent" style = "color:#212326">/unit/thirdAgent</option>
+      </select>
+    </div>
+
     <script src="https://cdn.swimos.org/js/3.10.2/swim-system.js"></script>
     <script>
 
@@ -22,22 +33,30 @@ const gauge = new swim.GaugeView()
     .sweepAngle(swim.Angle.rad(3 * Math.PI / 2))
     .dialColor("#cccccc")
     .meterColor("#989898")
-    .title(new swim.TextRunView("Foo, Bar, Baz").font("20px sans-serif"))
-    .font("14px sans-serif")
+    .title(new swim.TextRunView("Mean, Local Mean, Local Variance, Local Standard Deviation").font("10px sans-serif")) // TextView Docs to find newline
+    .font("10px sans-serif")
     .textColor("#4a4a4a");
 gaugeCanvas.append(gauge);
 
-const fooDial = new swim.DialView()
-    .label("FOO");
-gauge.setChildView("foo", fooDial);
+const avgDial = new swim.DialView()
+    .label("avg");
+gauge.setChildView("avg", avgDial);
 
-const barDial = new swim.DialView()
-    .label("BAR");
-gauge.setChildView("bar", barDial);
+const locAvgDial = new swim.DialView()
+    .label("localAvg");
+gauge.setChildView("localAvg", locAvgDial);
 
-const bazDial = new swim.DialView()
-    .label("BAZ");
-gauge.setChildView("baz", bazDial);
+const locVarDial = new swim.DialView()
+    .label("localVar");
+gauge.setChildView("localVar", locVarDial);
+
+const locStdDevDial = new swim.DialView()
+    .label("localStdDev");
+gauge.setChildView("localStdDev", locStdDevDial);
+
+var colorLow = "#50e3c2";
+var colorMed = "#359680";
+var colorHigh = "#1f5c4e"
 
 function updateDial(dial, max, key, value) {
   const v = value.get(key).numberValue();
@@ -45,21 +64,72 @@ function updateDial(dial, max, key, value) {
   const legend = key + ": " + (v) + " out of " + max;
   dial.value(v, tween)
       .total(max)
-      .meterColor(percent < 0.5 ? "#989898" : percent < 0.9 ? "#4a4a4a" : "#000000", tween);
+      .meterColor(percent < 0.5 ? colorLow : percent < 0.9 ? colorMed : colorHigh, tween);
   dial.label().text(legend);
 }
 
+
+// switching between web agents
+var agent_URI = "/unit/master";
+
 /* Data Subscriptions */
-const valueLink = swim.downlinkValue()
+
+// runs once
+var valueLink = swim.downlinkValue()
     .hostUri("warp://localhost:9001")
-    .nodeUri("/unit/master")
-    .laneUri("latest")
+    .nodeUri(agent_URI)
+    .laneUri("stats")
     .didSet(function (value) {
-      updateDial(fooDial, 70, "foo", value);
-      updateDial(barDial, 140, "bar", value);
-      updateDial(bazDial, 210, "baz", value);
+      updateDial(avgDial, 60, "avg", value);
+      updateDial(locAvgDial, 60, "localAvg", value);
+      updateDial(locVarDial, 1000, "localVar", value);
+      updateDial(locStdDevDial, 40, "localStdDev", value)
     })
     .open();
+
+
+// update logic runs whenever a new dropdown option is selected
+function update(val) {
+  if (valueLink) {
+    // close downlink on update
+    valueLink.close();
+
+    // update the node URI used in histogramLink to match the selected agent
+    agent_URI = document.getElementById('web_agent_select').value;
+    console.log(agent_URI);
+
+    valueLink = swim.downlinkValue()
+        .hostUri("warp://localhost:9001")
+        .nodeUri(agent_URI)
+        .laneUri("stats")
+        .didSet(function (value) {
+          updateDial(avgDial, 60, "avg", value);
+          updateDial(locAvgDial, 60, "localAvg", value);
+          updateDial(locVarDial, 1000, "localVar", value);
+          updateDial(locStdDevDial, 40, "localStdDev", value)
+        })
+        .open();
+
+    // switch statement that changes the plot color according to web agent
+    switch(agent_URI) {
+      case "/unit/secondAgent":
+        colorLow = "#3c52f0";
+        colorMed = "#182373";
+        colorHigh = "#0b1347"
+        break;
+      case "/unit/thirdAgent":
+          colorLow = "#d5d9e0";
+          colorMed = "#6d7178";
+          colorHigh = "#000000"
+          break;
+      default:
+        // for master web agent
+        colorLow = "#50e3c2";
+        colorMed = "#359680";
+        colorHigh = "#1f5c4e"
+    }
+  }
+}
 
     </script>
   </body>

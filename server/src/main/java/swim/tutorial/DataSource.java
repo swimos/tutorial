@@ -40,6 +40,26 @@ class DataSource {
       //   *Web Agent* addressable by "/unit/master" RUNNING ON the
       //   *(Swim) server* addressable by hostUri
       this.ref.command(this.hostUri, "/unit/master", "publish", msg);
+            
+      // *********************** EXAMPLE SOLUTION ***********************
+      
+      
+      // change and round scale of foo, bar, baz to make data sent to different agents more distinct and recognizable from each other
+      final Record msg2 = Record.create(3)
+              .slot("foo", (double)Math.round((foo + 20) * .5))
+              .slot("bar", (double)Math.round((bar - 25) * 1.05))
+              .slot("baz", (double)Math.round(baz * .5));
+      
+      final Record msg3 = Record.create(3)
+              .slot("foo", (double)Math.round((foo + 5) * .5))
+              .slot("bar", (double)Math.round((bar + 5) * .75))
+              .slot("baz", (double)Math.round((baz + 10) * .15));
+      
+      this.ref.command(this.hostUri, "/unit/secondAgent", "publish", msg2);
+      this.ref.command(this.hostUri, "/unit/thirdAgent", "publish", msg3);
+      
+      // ****************************************************************
+      
       indicator = (indicator + 1) % 1000;
 
       // Throttle events to four every three seconds
