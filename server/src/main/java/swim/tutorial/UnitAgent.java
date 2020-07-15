@@ -63,7 +63,7 @@ public class UnitAgent extends AbstractAgent {
 	        
 	        // calculating overall mean to send to average lane
 	        countSum += n.get("count").longValue();
-	        countTotal ++;
+	        countTotal++;
 	        final long setAvg = countSum / countTotal;
 	        avg.set(setAvg);
 	        
@@ -72,7 +72,7 @@ public class UnitAgent extends AbstractAgent {
 	        	index = 0;
 	        }
 	        recentData[index] = n.get("count").longValue();
-	        index ++;
+	        index++;
 	        
 	        // calculating local mean to send to local average lane
 	        long localSum = 0;
@@ -104,7 +104,7 @@ public class UnitAgent extends AbstractAgent {
 	    	  
 	    	  // remove logic for avg lane
 	    	  countSum -= o.get("count").longValue() ;
-	    	  countTotal --;
+	    	  countTotal--;
 	    	  final long setUpdatedAvg = countSum / countTotal;
 	    	  avg.set(setUpdatedAvg);
 	    	  
