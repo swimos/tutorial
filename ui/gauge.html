@@ -2,51 +2,57 @@
 <html>
   <head>
     <title>Swim Gauge</title>
-    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, shrink-to-fit=no, viewport-fit=cover" />
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, maximum-scale=1, user-scalable=0, shrink-to-fit=no, viewport-fit=cover">
   </head>
-  <body style="display: flex; justify-content: center; align-items: center; width: 100vw; height: 100vh; margin: 0;">
-    <div id="app" style="display: flex; width: 67%; height: 67%; flex-direction: column;">
-    </div>
-    <script src="https://cdn.swimos.org/js/3.10.2/swim-system.js"></script>
+  <body swim-theme style="position: fixed; display: flex; justify-content: center; align-items: center; width: 100vw; height: 100vh; margin: 0;">
+    <script src="https://cdn.swimos.org/js/3.11.1/swim-system.js"></script>
+    <script src="https://cdn.swimos.org/js/3.11.1/swim-toolkit.js"></script>
     <script>
 
-const app = new swim.HtmlAppView(document.getElementById("app"));
+const bodyView = swim.HtmlView.fromNode(document.body);
 
-const gaugeCanvas = app.append('div').position('relative').append("canvas");
+const containerView = bodyView.append("div").display("flex").width("67%").height("67%").touchAction("none").userSelect("none");
 
-const tween = swim.Transition.duration(1000);
+const canvasView = swim.CanvasView.create()
+    .mouseEventsEnabled(true)
+    .pointerEventsEnabled(true)
+    .touchEventsEnabled(true)
+    .touchAction("manipulation");
+
 
 /* Gauge View */
-const gauge = new swim.GaugeView()
+const gaugeView = canvasView.append(swim.GaugeView)
+    .innerRadius(swim.Length.pct(25))
     .startAngle(swim.Angle.rad(3 * Math.PI / 4))
     .sweepAngle(swim.Angle.rad(3 * Math.PI / 2))
-    .dialColor("#cccccc")
-    .meterColor("#989898")
-    .title(new swim.TextRunView("Foo, Bar, Baz").font("20px sans-serif"))
     .font("14px sans-serif")
-    .textColor("#4a4a4a");
-gaugeCanvas.append(gauge);
+    .title(swim.TextRunView.fromAny("Foo, Bar, Baz").font("20px sans-serif"))
+    .font("14px sans-serif")
+    .textColor("#4a4a4a")
+    .on("pointerover", function (event) {
+      if (event.targetView instanceof swim.DialView) {
+        event.targetView.modifyMood(swim.Feel.default, [[swim.Feel.secondary, 1]], true);
+      }
+    })
+    .on("pointerout", function (event) {
+      if (event.targetView instanceof swim.DialView) {
+        event.targetView.modifyMood(swim.Feel.default, [[swim.Feel.secondary, void 0]], true);
+      }
+    });
 
-const fooDial = new swim.DialView()
-    .label("FOO");
-gauge.setChildView("foo", fooDial);
+const fooDial = gaugeView.append(swim.DialView, "FOO");
 
-const barDial = new swim.DialView()
-    .label("BAR");
-gauge.setChildView("bar", barDial);
+const barDial = gaugeView.append(swim.DialView, "BAR");
 
-const bazDial = new swim.DialView()
-    .label("BAZ");
-gauge.setChildView("baz", bazDial);
+const bazDial = gaugeView.append(swim.DialView, "BAZ");
 
 function updateDial(dial, max, key, value) {
   const v = value.get(key).numberValue();
   const percent = v / max;
   const legend = key + ": " + (v) + " out of " + max;
-  dial.value(v, tween)
-      .total(max)
-      .meterColor(percent < 0.5 ? "#989898" : percent < 0.9 ? "#4a4a4a" : "#000000", tween);
-  dial.label().text(legend);
+  const timing = swim.Easing.linear.withDuration(1000);
+  dial.value(percent, timing);
+  dial.label(legend);
 }
 
 /* Data Subscriptions */
@@ -60,6 +66,8 @@ const valueLink = swim.downlinkValue()
       updateDial(bazDial, 210, "baz", value);
     })
     .open();
+
+containerView.append(canvasView);
 
     </script>
   </body>

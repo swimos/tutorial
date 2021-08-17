@@ -2,47 +2,55 @@
 <html>
   <head>
     <title>Swim Pie</title>
-    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, shrink-to-fit=no, viewport-fit=cover" />
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, maximum-scale=1, user-scalable=0, shrink-to-fit=no, viewport-fit=cover">
   </head>
-  <body style="display: flex; justify-content: center; align-items: center; width: 100vw; height: 100vh; margin: 0;">
-    <div id="app" style="display: flex; width: 67%; height: 67%; flex-direction: column;">
-    </div>
-    <script src="https://cdn.swimos.org/js/3.10.2/swim-system.js"></script>
+  <body swim-theme style="position: fixed; display: flex; justify-content: center; align-items: center; width: 100vw; height: 100vh; margin: 0;">
+    <script src="https://cdn.swimos.org/js/3.11.1/swim-system.js"></script>
+    <script src="https://cdn.swimos.org/js/3.11.1/swim-toolkit.js"></script>
     <script>
 
-const app = new swim.HtmlAppView(document.getElementById("app"));
+const bodyView = swim.HtmlView.fromNode(document.body);
 
-const pieCanvas = app.append('div').position('relative').append("canvas");
+const containerView = bodyView.append("div").display("flex").width("67%").height("67%").touchAction("none").userSelect("none");
 
-const tween = swim.Transition.duration(1000);
+const canvasView = swim.CanvasView.create()
+    .mouseEventsEnabled(true)
+    .pointerEventsEnabled(true)
+    .touchEventsEnabled(true)
+    .touchAction("manipulation");
 
 /* Pie View */
+const pieView = canvasView.append(swim.PieView)
+    .font("14px sans-serif");
+
 const sliceColors = [swim.Color.parse("#00a6ed"),
     swim.Color.parse("#6acd00"),
     swim.Color.parse("#c200fa")];
-const pie = new swim.PieView()
-    // .innerRadius("15%")
-    .outerRadius("25%")
-    .tickColor("#b7b7b7")
-    .font("14px sans-serif")
-    .textColor("#4a4a4a");
-pieCanvas.append(pie);
+
 const pieIndices = {"foo": 0, "bar": 1, "baz": 2};
 
 function updateSlice(key, value) {
   const v = value.get(key).numberValue();
-  let slice = pie.getChildView(key);
+  let slice = pieView.getChildView(key);
   if (slice) {
-    slice.value(v, tween);
-    slice.label().text(v);
+    const timing = swim.Easing.linear.withDuration(1000);
+    slice.value(v, timing);
+    slice.label(v.toFixed());
   } else {
     const sliceColor = sliceColors[pieIndices[key]];
-    slice = new swim.SliceView()
+    slice = pieView.append(swim.SliceView, key)
         .value(v)
         .sliceColor(sliceColor)
         .label(v.toFixed())
-        .legend(key);
-    pie.setChildView(key, slice);    
+        .legend(key)
+        .textColor("#4a4a4a")
+        .on("pointerenter", function (event) {
+          slice0View.modifyMood(swim.Feel.default, [[swim.Feel.primary, 1]], true);
+        })
+        .on("pointerleave", function (event) {
+          slice0View.modifyMood(swim.Feel.default, [[swim.Feel.primary, void 0]], true);
+        });
+
   }
 }
 
@@ -58,6 +66,8 @@ const valueLink = swim.downlinkValue()
     })
     .open();
 
+containerView.append(canvasView);
+
     </script>
-  </body>
+</body>
 </html>

@@ -26,7 +26,6 @@ def useModules = jvmVersion >= 9 && !project.hasProperty('no-modules')
 
 repositories {
   mavenCentral()
-  jcenter()
 }
 
 dependencies {
