@@ -11,7 +11,7 @@ Swim 是建造可规模化扩展的，终端到终端的流式（streaming）应
 
 
 ## Run
-* [安装 JDK 9+](https://www.oracle.com/technetwork/java/javase/downloads/index.html).
+* [安装 JDK 11+](https://www.oracle.com/technetwork/java/javase/downloads/index.html).
   * 确保您的`JAVA_HOME`环境变量设置指向您的Java安装地址。
   * 确保您的`PATH`包含`$JAVA_HOME`。
 

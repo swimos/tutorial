@@ -1,6 +1,6 @@
 package swim.tutorial;
 
-import swim.api.ref.SwimRef;
+import swim.api.ref.WarpRef;
 import swim.structure.Record;
 
 /**
@@ -9,10 +9,10 @@ import swim.structure.Record;
  */
 class DataSource {
 
-  private final SwimRef ref;
+  private final WarpRef ref;
   private final String hostUri;
 
-  DataSource(SwimRef ref, String hostUri) {
+  DataSource(WarpRef ref, String hostUri) {
     this.ref = ref;
     this.hostUri = hostUri;
   }

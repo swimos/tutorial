@@ -16,7 +16,7 @@ plugins {
 group = 'org.swimos'
 description = 'Tutorial- Web Agents'
 ext.moduleName = 'swim.tutorial'
-sourceCompatibility = 1.9
+sourceCompatibility = 11
 version = project.property('swim.version')
 mainClassName = 'swim.tutorial.TutorialPlane'
 
