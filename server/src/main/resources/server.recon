@@ -1,5 +1,10 @@
 tutorial: @fabric {
   @plane(class: "swim.tutorial.TutorialPlane")
+
+  @node {
+    pattern: "/unit/:id"
+    @agent(class: "swim.tutorial.UnitAgent")
+  }
 }
 
 @web(port: 9001) {
