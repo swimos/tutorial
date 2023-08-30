@@ -20,7 +20,6 @@ sourceCompatibility = 11
 version = project.property('swim.version')
 mainClassName = 'swim.tutorial.TutorialPlane'
 
-//def moduleName = 'swim.tutorial'
 def jvmVersion = System.getProperty('java.version').split('\\.')[0] as Integer
 def useModules = jvmVersion >= 9 && !project.hasProperty('no-modules')
 
@@ -36,7 +35,7 @@ dependencies {
 afterEvaluate {
 
   sourceSets {
-    main.output.resourcesDir = main.java.outputDir
+    main.output.resourcesDir = main.java.classesDirectory
   }
 
   compileJava {
@@ -59,7 +58,7 @@ afterEvaluate {
     manifest {
       attributes(
               'Implementation-Title': moduleName,
-              'Implementation-Version': version,
+              'Implementation-Version': archiveVersion,
               'Main-Class': mainClassName)
     }
   }
@@ -91,7 +90,7 @@ afterEvaluate {
               '-Xms3g',
               '-Xmx3g',
               '--module-path', 'APP_HOME_LIBS',
-              '--module', "${moduleName}/${mainClassName}"
+              '--module', "${moduleName}/${mainClass}"
       ]
     }
     doLast {
@@ -111,7 +110,7 @@ afterEvaluate {
   }
 
   task packageDeb(type: Deb) {
-    maintainer = 'developer@swim.inc'
+    maintainer = 'developers@swimos.org'
 
     configurationFile("/etc/sysconfig/${project.name}")
     preInstall "addgroup --quiet --system ${project.name}"
